@@ -2,7 +2,7 @@ import torch
 import os
 #from datasets import dataset
 
-from .working.machinelearning.datasets.dataset import dataset
+from .datasets.dataset import dataset
 
 
 
