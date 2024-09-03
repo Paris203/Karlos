@@ -1,7 +1,8 @@
 import torch
 import os
 #from datasets import dataset
-from machine_learning.datasets.dataset import dataset
+from ..datasets.dataset import dataset
+
 
 
 def read_dataset(input_size, batch_size, root, set):
