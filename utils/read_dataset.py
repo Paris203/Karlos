@@ -1,7 +1,7 @@
 import torch
 import os
 #from datasets import dataset
-from kaggle.working.machine_learning.datasets.dataset import dataset
+from ..working.machine_learning.datasets.dataset import dataset
 
 
 
