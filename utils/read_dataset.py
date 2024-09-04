@@ -2,7 +2,7 @@ import torch
 import os
 import sys
 #from datasets import dataset
-sys.path.append("..")
+sys.path.append("datasets/dataset.py")
 
 from datasets.dataset import dataset
 
