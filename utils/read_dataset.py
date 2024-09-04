@@ -4,7 +4,8 @@ import sys
 #from datasets import dataset
 sys.path.append("./datasets/dataset.py")
 
-from datasets.dataset import dataset
+from dataset import dataset
+print(dataset)
 
 
 
