@@ -4,7 +4,8 @@ import sys
 #from datasets import dataset
 sys.path.append("/machinelearning/datasets/")
 
-from datasets import dataset
+from machinelearning.datasets.dataset import dataset
+
 print(dataset)
 
 
