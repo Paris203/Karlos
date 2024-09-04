@@ -11,8 +11,14 @@ from utils.train_model import train
 from utils.read_dataset import read_dataset
 from utils.auto_laod_resume import auto_load_resume
 from networks.model import MainNet
-
+import sys
 import os
+
+# Add the parent directory of 'utils' and 'datasets' to the Python path
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+from utils.read_dataset import read_dataset
+
 
 os.environ['CUDA_VISIBLE_DEVICES'] = CUDA_VISIBLE_DEVICES
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
