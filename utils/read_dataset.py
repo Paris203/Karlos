@@ -1,6 +1,8 @@
 import torch
 import os
+import sys
 #from datasets import dataset
+sys.path.append("..")
 
 from datasets.dataset import dataset
 
