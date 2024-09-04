@@ -15,9 +15,9 @@ import sys
 import os
 
 # Add the parent directory of 'utils' and 'datasets' to the Python path
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
-from utils.read_dataset import read_dataset
+# sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+#
+# from utils.read_dataset import read_dataset
 
 
 os.environ['CUDA_VISIBLE_DEVICES'] = CUDA_VISIBLE_DEVICES

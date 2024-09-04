@@ -1,6 +1,6 @@
 import torch
 import os
-from datasetsb import dataset
+from datasets import dataset
 
 def read_dataset(input_size, batch_size, root, set):
     if set == 'CUB':
