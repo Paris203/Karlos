@@ -2,9 +2,9 @@ import torch
 import os
 import sys
 #from datasets import dataset
-sys.path.append("/datasets/")
+sys.path.append("/machinelearning/datasets/")
 
-import dataset
+from datasets import dataset
 print(dataset)
 
 
