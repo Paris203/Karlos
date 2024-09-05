@@ -94,7 +94,7 @@ class MainNet(nn.Module):
     def forward(self, x, epoch, batch_idx, status='test', DEVICE= device):
         fm, embedding, conv5_b = self.pretrained_model(x)
         batch_size, channel_size, side_size, _ = fm.shape
-        assert channel_size == 512
+        assert channel_size == 2048 # 512 change by diallo
 
         # raw branch
         raw_logits = self.rawcls_net(embedding)
