@@ -222,17 +222,17 @@ class ResNet(nn.Module):
         return fm, embeeding, conv5_b
 
 
-# def _resnet(arch, block, layers, pretrained, pth_path, **kwargs):
-#     model = ResNet(block, layers, **kwargs)
-#     if pretrained:
-#         state_dict = torch.load(pth_path)
-#         model.load_state_dict(state_dict)
-#     return model
-
-def _resnet(arch, block,layers,  **kwargs):
+def _resnet(arch, block, layers, pretrained, pth_path, **kwargs):
     model = ResNet(block, layers, **kwargs)
-
+    if pretrained:
+        state_dict = torch.load(pth_path)
+        model.load_state_dict(state_dict)
     return model
+# change by Diallo
+# def _resnet(arch, block,layers,  **kwargs):
+#     model = ResNet(block, layers, **kwargs)
+
+#     return model
 
 
 def resnet18( **kwargs):
