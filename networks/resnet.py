@@ -227,6 +227,7 @@ def _resnet(arch, block, layers, pretrained, pth_path, **kwargs):
     if pretrained:
         state_dict = torch.load(pth_path)
         model.load_state_dict(state_dict)
+    print(state_dict.keys())
     return model
 # change by Diallo
 # def _resnet(arch, block,layers,  **kwargs):
