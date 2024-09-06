@@ -10,11 +10,12 @@ def show_batch(images):
     import matplotlib.pyplot as plt
     j=0
     from torchvision.utils import make_grid
-    for i, (image) in enumerate((images)):
+    for i, image in enumerate((images)):
+        print(image.shape)
         j=j+1
 
         fig, ax = plt.subplots(figsize=(1, 1))
-        ax.imshow(make_grid(image.numpy(), 10).permute(1,2,0))
+        ax.imshow(make_grid(image, 10).permute(1,2,0))
 
         if j ==128:
             break
