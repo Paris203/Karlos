@@ -22,20 +22,25 @@ from torchvision.utils import make_grid
 #     ax.imshow(image.cpu().numpy())  # Show it as an RGB image
 #     plt.show()
 
+
 def show_batch(images):
-   j=0
-   print(len(images[0]))
-   for image in images:
-      image = image[:3, :, :]  # Take the first 3 channels
-      print(image.shape)
-      j=j+1
+    j = 0
+    print("Image batch shape:", images.shape)
+    
+    # Iterate through the batch of images
+    for image in images:
+        image = image[:3, :, :]  # Take the first 3 channels
+        print("Image shape after selecting 3 channels:", image.shape)
+        
+        # Create a plot for each image
+        fig, ax = plt.subplots(figsize=(2, 2))  # Slightly larger figure
+        ax.imshow(image.permute(1, 2, 0))  # Rearrange for visualization (H, W, C)
+        plt.show()
+        
+        j += 1
+        if j == 5:  # Show only the first 5 images
+            break
 
-      fig, ax = plt.subplots(figsize=(1, 1))
-      ax.imshow(make_grid(image, 10).permute(1,2,0))
-      plt.show()
-
-      if j ==5:
-           break
 
 
 model_urls = {
