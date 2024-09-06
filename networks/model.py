@@ -54,11 +54,12 @@ class APPM(nn.Module):
     def forward(self, proposalN, x, ratios, window_nums_sum, N_list, iou_threshs, DEVICE=device):
         batch, channels, _, _ = x.size()
         avgs = [self.avgpools[i](x) for i in range(len(ratios))]
+        print(f"avgs shape {avgs.shape}")
 
         # feature map sum
         fm_sum = [torch.sum(avgs[i], dim=1) for i in range(len(ratios))]
         print(f"feature map shape {fm_sum.shape}")
-        break
+  
 
         all_scores = torch.cat([fm_sum[i].view(batch, -1, 1) for i in range(len(ratios))], dim=1)
         windows_scores_np = all_scores.data.cpu().numpy()
