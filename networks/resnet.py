@@ -211,7 +211,7 @@ class ResNet(nn.Module):
         x = self.layer4[2:](conv5_b)
 
         fm = x
-        #print("fm", fm.shape)
+        print("fm", fm.shape)
         x = self.avgpool(x)
         print("avgpool", x.shape)
         x = x.view(x.size(0), -1)
