@@ -225,7 +225,7 @@ class ResNet(nn.Module):
 
         fm = x
         print("fm", fm.shape)
-        show_batch(fm)
+        show_batch(fm.detach().numpy())
         x = self.avgpool(x)
         print("avgpool", x.shape)
         x = x.view(x.size(0), -1)
