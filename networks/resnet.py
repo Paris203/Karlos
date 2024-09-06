@@ -213,6 +213,7 @@ class ResNet(nn.Module):
         fm = x
         #print("fm", fm.shape)
         x = self.avgpool(x)
+        print("avgpool", x.shape)
         x = x.view(x.size(0), -1)
         x = self.dropout(x)
         embeeding = x
