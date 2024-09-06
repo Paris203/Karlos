@@ -57,6 +57,8 @@ class APPM(nn.Module):
 
         # feature map sum
         fm_sum = [torch.sum(avgs[i], dim=1) for i in range(len(ratios))]
+        print(f"feature map shape {fm_sum.shape}")
+        break
 
         all_scores = torch.cat([fm_sum[i].view(batch, -1, 1) for i in range(len(ratios))], dim=1)
         windows_scores_np = all_scores.data.cpu().numpy()
