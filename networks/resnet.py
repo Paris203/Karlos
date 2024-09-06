@@ -10,31 +10,31 @@ import torch
 import matplotlib.pyplot as plt
 from torchvision.utils import make_grid
 
-# def show_batch(image):
-#     # Select the first 3 channels and treat them as RGB
-#     image = image[:3, :, :]  # Take the first 3 channels
+def show_batch(image):
+    # Select the first 3 channels and treat them as RGB
+    image = image[:3, :, :]  # Take the first 3 channels
 
-#     # Permute to make it compatible with imshow (Height, Width, Channels)
-#     image = image.permute(1, 2, 0)
+    # Permute to make it compatible with imshow (Height, Width, Channels)
+    image = image.permute(1, 2, 0)
 
-#     fig, ax = plt.subplots(figsize=(10, 10))
-#     ax.imshow(image.cpu().numpy())  # Show it as an RGB image
-#     plt.show()
+    fig, ax = plt.subplots(figsize=(10, 10))
+    ax.imshow(image.cpu().numpy())  # Show it as an RGB image
+    plt.show()
 
-def show_batch(images):
-    import matplotlib.pyplot as plt
-    j=0
-    from torchvision.utils import make_grid
-    for i, image in enumerate((images)):
-        image = image[:3, :, :]  # Take the first 3 channels
-        print(image.shape)
-        j=j+1
+# def show_batch(images):
+#     import matplotlib.pyplot as plt
+#     j=0
+#     from torchvision.utils import make_grid
+#     for i, image in enumerate((images)):
+#         image = image[:3, :, :]  # Take the first 3 channels
+#         print(image.shape)
+#         j=j+1
 
-        fig, ax = plt.subplots(figsize=(1, 1))
-        ax.imshow(make_grid(image, 10).permute(1,2,0))
+#         fig, ax = plt.subplots(figsize=(1, 1))
+#         ax.imshow(make_grid(image, 10).permute(1,2,0))
 
-        if j ==5:
-            break
+#         if j ==5:
+#             break
 
 
 model_urls = {
