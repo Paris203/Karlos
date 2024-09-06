@@ -14,7 +14,7 @@ def show_batch(images):
         j=j+1
 
         fig, ax = plt.subplots(figsize=(1, 1))
-        ax.imshow(make_grid(image, 10).permute(1,2,0))
+        ax.imshow(make_grid(image.numpy(), 10).permute(1,2,0))
 
         if j ==128:
             break
@@ -225,7 +225,7 @@ class ResNet(nn.Module):
 
         fm = x
         print("fm", fm.shape)
-        show_batch(fm.detach().cpu().numpy())
+        show_batch(fm.detach().cpu())
         x = self.avgpool(x)
         print("avgpool", x.shape)
         x = x.view(x.size(0), -1)
