@@ -27,13 +27,13 @@ def show_batch(images):
     from torchvision.utils import make_grid
     for i, image in enumerate((images)):
         image = image[:3, :, :]  # Take the first 3 channels
-        #print(image.shape)
+        print(image.shape)
         j=j+1
 
         fig, ax = plt.subplots(figsize=(1, 1))
         ax.imshow(make_grid(image, 10).permute(1,2,0))
 
-        if j ==10:
+        if j ==6:
             break
 
 
@@ -241,10 +241,10 @@ class ResNet(nn.Module):
         x = self.layer4[2:](conv5_b)
 
         fm = x
-        print("fm", fm.shape)
+        #print("fm", fm.shape)
         show_batch(fm.detach().cpu())
         x = self.avgpool(x)
-        print("avgpool", x.shape)
+        #print("avgpool", x.shape)
         x = x.view(x.size(0), -1)
         x = self.dropout(x)
         embeeding = x
