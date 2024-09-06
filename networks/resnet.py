@@ -33,7 +33,7 @@ def show_batch(images):
         fig, ax = plt.subplots(figsize=(1, 1))
         ax.imshow(make_grid(image, 10).permute(1,2,0))
 
-        if j ==6:
+        if j ==5:
             break
 
 
