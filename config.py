@@ -10,7 +10,7 @@ model_name = ''
 
 batch_size = 6
 vis_num = batch_size  # The number of visualized images in tensorboard
-eval_trainset = True  # Whether or not evaluate trainset
+eval_trainset = False  # Whether or not evaluate trainset
 save_interval = 1
 max_checkpoint_num = 200
 end_epoch = 10
