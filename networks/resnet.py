@@ -14,7 +14,7 @@ def show_batch(images):
         j=j+1
 
         fig, ax = plt.subplots(figsize=(1, 1))
-        ax.imshow(make_grid(image.cpu().numpy(), 10).permute(1,2,0))
+        ax.imshow(make_grid(image, 10).permute(1,2,0))
 
         if j ==128:
             break
