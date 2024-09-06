@@ -27,13 +27,13 @@ def show_batch(images):
     from torchvision.utils import make_grid
     for i, image in enumerate((images)):
         image = image[:3, :, :]  # Take the first 3 channels
-        print(image.shape)
+        #print(image.shape)
         j=j+1
 
         fig, ax = plt.subplots(figsize=(1, 1))
         ax.imshow(make_grid(image, 10).permute(1,2,0))
 
-        if j ==128:
+        if j ==10:
             break
 
 
