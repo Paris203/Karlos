@@ -6,6 +6,19 @@ __all__ = ['ResNet', 'resnet18', 'resnet34', 'resnet50', 'resnet101',
            'resnet152', 'resnext50_32x4d', 'resnext101_32x8d',
            'wide_resnet50_2', 'wide_resnet101_2']
 
+def show_batch(images):
+    import matplotlib.pyplot as plt
+    j=0
+    from torchvision.utils import make_grid
+    for i, (image) in enumerate((images)):
+        j=j+1
+
+        fig, ax = plt.subplots(figsize=(1, 1))
+        ax.imshow(make_grid(image.cpu(), 10).permute(1,2,0))
+
+        if j ==128:
+            break
+
 
 model_urls = {
     'resnet18': 'https://download.pytorch.org/models/resnet18-5c106cde.pth',
@@ -212,6 +225,7 @@ class ResNet(nn.Module):
 
         fm = x
         print("fm", fm.shape)
+        show_batch(fm)
         x = self.avgpool(x)
         print("avgpool", x.shape)
         x = x.view(x.size(0), -1)
