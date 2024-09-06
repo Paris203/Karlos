@@ -6,11 +6,27 @@ __all__ = ['ResNet', 'resnet18', 'resnet34', 'resnet50', 'resnet101',
            'resnet152', 'resnext50_32x4d', 'resnext101_32x8d',
            'wide_resnet50_2', 'wide_resnet101_2']
 
+import torch
+import matplotlib.pyplot as plt
+from torchvision.utils import make_grid
+
+# def show_batch(image):
+#     # Select the first 3 channels and treat them as RGB
+#     image = image[:3, :, :]  # Take the first 3 channels
+
+#     # Permute to make it compatible with imshow (Height, Width, Channels)
+#     image = image.permute(1, 2, 0)
+
+#     fig, ax = plt.subplots(figsize=(10, 10))
+#     ax.imshow(image.cpu().numpy())  # Show it as an RGB image
+#     plt.show()
+
 def show_batch(images):
     import matplotlib.pyplot as plt
     j=0
     from torchvision.utils import make_grid
     for i, image in enumerate((images)):
+        image = image[:3, :, :]  # Take the first 3 channels
         print(image.shape)
         j=j+1
 
