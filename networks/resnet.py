@@ -24,8 +24,8 @@ from torchvision.utils import make_grid
 
 def show_batch(images):
    j=0
-   print(images[0])
-   for i, image in enumerate(images[0]):
+   print(len(images[0]))
+   for image in images:
       image = image[:3, :, :]  # Take the first 3 channels
       print(image.shape)
       j=j+1
