@@ -28,7 +28,7 @@ def plot_image(image_tensor):
     # Plot the image using matplotlib
     plt.figure(figsize=(5, 5))
     plt.imshow(image.numpy())  # Convert tensor to NumPy
-    plt.axis('off')  # Turn off axis for cleaner image display
+    #plt.axis('off')  # Turn off axis for cleaner image display
     plt.show()
 
 # Example of how to use it with an image from a batch (assuming you have a tensor)
@@ -36,26 +36,26 @@ def plot_image(image_tensor):
  # Replace 'images[0]' with your image tensor
 
 
-def show_batch(images):
-    j = 0
-    print("Image batch shape:", type(images))
+# def show_batch(images):
+#     j = 0
+#     print("Image batch shape:", type(images))
     
-    # Iterate through the batch of images
-    for image in images:
-        image = image[:3, :, :]  # Take the first 3 channels
-        print("Image shape after selecting 3 channels:", image.shape)
+#     # Iterate through the batch of images
+#     for image in images:
+#         image = image[:3, :, :]  # Take the first 3 channels
+#         print("Image shape after selecting 3 channels:", image.shape)
         
-        # Create a plot for each image
-        #fig, ax = plt.subplots(figsize=(2, 2))  # Slightly larger figure
-        #ax.imshow(image.permute(1, 2, 0))  # Rearrange for visualization (H, W, C)
-        #plt.show()
-        #plt.close(fig)
-        plot_image(images[0]) 
+#         # Create a plot for each image
+#         #fig, ax = plt.subplots(figsize=(2, 2))  # Slightly larger figure
+#         #ax.imshow(image.permute(1, 2, 0))  # Rearrange for visualization (H, W, C)
+#         #plt.show()
+#         #plt.close(fig)
+#         plot_image(images[0]) 
         
-        j += 1
-        if j == 4:  # Show only the first 5 images
-            break
-        break
+#         j += 1
+#         if j == 4:  # Show only the first 5 images
+#             break
+#         break
 
 
 
@@ -146,7 +146,7 @@ class MainNet(nn.Module):
 
     def forward(self, x, epoch, batch_idx, status='test', DEVICE= device):
         fm, embedding, conv5_b = self.pretrained_model(x)
-        show_batch(fm)
+        plot_image(fm[0])
         batch_size, channel_size, side_size, _ = fm.shape
         assert channel_size == 2048 # 512 change by diallo
 
