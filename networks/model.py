@@ -162,6 +162,7 @@ class MainNet(nn.Module):
 
         #SCDA
         coordinates = torch.tensor(AOLM(fm.detach(), conv5_b.detach()))
+        print(coordinates)
 
         local_imgs = torch.zeros([batch_size, 3, 448, 448]).to(DEVICE)  # [N, 3, 448, 448]
         for i in range(batch_size):
