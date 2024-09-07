@@ -9,9 +9,36 @@ import matplotlib.pyplot as plt
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+import matplotlib.pyplot as plt
+
+def plot_image(image_tensor):
+    # Ensure the tensor is on the CPU and normalized (if necessary)
+    image = image_tensor.cpu() if image_tensor.is_cuda else image_tensor
+    
+    # Normalize the image to the range [0, 1] (optional)
+    image = (image - image.min()) / (image.max() - image.min())
+    
+    # Select the first 3 channels if the image has more than 3 (for RGB)
+    if image.shape[0] > 3:
+        image = image[:3, :, :]
+    
+    # Permute the dimensions to (Height, Width, Channels)
+    image = image.permute(1, 2, 0)
+    
+    # Plot the image using matplotlib
+    plt.figure(figsize=(5, 5))
+    plt.imshow(image.numpy())  # Convert tensor to NumPy
+    plt.axis('off')  # Turn off axis for cleaner image display
+    plt.show()
+
+# Example of how to use it with an image from a batch (assuming you have a tensor)
+# For a batch of images, take one image by selecting the first tensor
+ # Replace 'images[0]' with your image tensor
+
+
 def show_batch(images):
     j = 0
-    print("Image batch shape:", images.shape)
+    print("Image batch shape:", type(images))
     
     # Iterate through the batch of images
     for image in images:
@@ -19,10 +46,11 @@ def show_batch(images):
         print("Image shape after selecting 3 channels:", image.shape)
         
         # Create a plot for each image
-        fig, ax = plt.subplots(figsize=(2, 2))  # Slightly larger figure
-        ax.imshow(image.permute(1, 2, 0))  # Rearrange for visualization (H, W, C)
-        plt.show()
-        plt.close(fig)
+        #fig, ax = plt.subplots(figsize=(2, 2))  # Slightly larger figure
+        #ax.imshow(image.permute(1, 2, 0))  # Rearrange for visualization (H, W, C)
+        #plt.show()
+        #plt.close(fig)
+        plot_image(images[0]) 
         
         j += 1
         if j == 4:  # Show only the first 5 images
