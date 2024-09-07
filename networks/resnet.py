@@ -39,7 +39,7 @@ def show_batch(images):
         plt.close(fig)
         
         j += 1
-        if j == 5:  # Show only the first 5 images
+        if j == 4:  # Show only the first 5 images
             break
 
 
