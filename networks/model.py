@@ -171,7 +171,7 @@ class MainNet(nn.Module):
         y_rightlow = coordinates[3]
         image_box = fm[x_lefttop[0]:x_rightlow[0], y_lefttop[0]:y_rightlow[0], :]
         print(f"image box: {image_box.shape}")
-        plot_and_save_image(image_box .detach())
+        plot_and_save_image(image_box.detach())
 
         local_imgs = torch.zeros([batch_size, 3, 448, 448]).to(DEVICE)  # [N, 3, 448, 448]
         for i in range(batch_size):
