@@ -36,6 +36,7 @@ def show_batch(images):
         fig, ax = plt.subplots(figsize=(2, 2))  # Slightly larger figure
         ax.imshow(image.permute(1, 2, 0))  # Rearrange for visualization (H, W, C)
         plt.show()
+        plt.close(fig)
         
         j += 1
         if j == 5:  # Show only the first 5 images
