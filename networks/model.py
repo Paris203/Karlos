@@ -18,7 +18,7 @@ def plot_and_save_image(image_tensor, save_path="./saved_image.png"):
     image = image_tensor.cpu() if image_tensor.is_cuda else image_tensor
     
     # Normalize the image to the range [0, 1] (optional)
-    image = (image - image.min()) / (image.max() - image.min())
+    #image = (image - image.min()) / (image.max() - image.min())
     
     # Select the first 3 channels if the image has more than 3 (for RGB)
     if image.shape[0] > 3:
@@ -169,7 +169,7 @@ class MainNet(nn.Module):
         x_rightlow = coordinates[2]
         y_lefttop = coordinates[1]
         y_rightlow = coordinates[3]
-        image_box = fm[:, :, x_lefttop:x_rightlow, y_lefttop:y_rightlow]
+        image_box = fm[:, :, x_lefttop[2]:x_rightlow[2], y_lefttop[2]:y_rightlow[2]]
         print(f"image box: {image_box.shape}")
         plot_and_save_image(image_box.detach())
 
