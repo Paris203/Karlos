@@ -5,6 +5,7 @@ from networks import resnet
 from config import pretrain_path, coordinates_cat, iou_threshs, window_nums_sum, ratios, N_list
 import numpy as np
 from utils.AOLM import AOLM
+import matplotlib.pyplot as plt
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
