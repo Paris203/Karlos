@@ -8,6 +8,26 @@ from utils.AOLM import AOLM
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+def show_batch(images):
+    j = 0
+    print("Image batch shape:", images.shape)
+    
+    # Iterate through the batch of images
+    for image in images:
+        image = image[:3, :, :]  # Take the first 3 channels
+        print("Image shape after selecting 3 channels:", image.shape)
+        
+        # Create a plot for each image
+        fig, ax = plt.subplots(figsize=(2, 2))  # Slightly larger figure
+        ax.imshow(image.permute(1, 2, 0))  # Rearrange for visualization (H, W, C)
+        plt.show()
+        plt.close(fig)
+        
+        j += 1
+        if j == 4:  # Show only the first 5 images
+            break
+
+
 
 def nms(scores_np, proposalN, iou_threshs, coordinates):
     if not (type(scores_np).__module__ == 'numpy' and len(scores_np.shape) == 2 and scores_np.shape[1] == 1):
@@ -96,6 +116,7 @@ class MainNet(nn.Module):
 
     def forward(self, x, epoch, batch_idx, status='test', DEVICE= device):
         fm, embedding, conv5_b = self.pretrained_model(x)
+        show_batch(fm.detach.cpu())
         batch_size, channel_size, side_size, _ = fm.shape
         assert channel_size == 2048 # 512 change by diallo
 
