@@ -8,7 +8,7 @@ CUDA_VISIBLE_DEVICES = '0'  # The current version only supports one GPU training
 set = 'CUB'  # Different dataset with different
 model_name = ''
 
-batch_size = 8
+batch_size = 6
 vis_num = batch_size  # The number of visualized images in tensorboard
 eval_trainset = False  # Whether or not evaluate trainset
 save_interval = 1
