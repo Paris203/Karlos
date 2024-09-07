@@ -27,7 +27,7 @@ def show_batch(images):
         j += 1
         if j == 4:  # Show only the first 5 images
             break
-     break
+      break
 
 
 
