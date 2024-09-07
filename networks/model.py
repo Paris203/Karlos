@@ -11,7 +11,9 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 import matplotlib.pyplot as plt
 
-def plot_image(image_tensor):
+import matplotlib.pyplot as plt
+
+def plot_and_save_image(image_tensor, save_path="./saved_image.png"):
     # Ensure the tensor is on the CPU and normalized (if necessary)
     image = image_tensor.cpu() if image_tensor.is_cuda else image_tensor
     
@@ -26,14 +28,19 @@ def plot_image(image_tensor):
     image = image.permute(1, 2, 0)
     
     # Plot the image using matplotlib
-    plt.figure(figsize=(5, 5))
-    plt.imshow(image.numpy())  # Convert tensor to NumPy
-    #plt.axis('off')  # Turn off axis for cleaner image display
+    fig, ax = plt.subplots(figsize=(5, 5))  # Create the figure and axis
+    ax.imshow(image.numpy())  # Convert tensor to NumPy and display the image
+    plt.axis('off')  # Turn off axis for cleaner image display
+
+    # Save the image to the specified path
+    plt.savefig(save_path, bbox_inches='tight')  # Save with tight bounding box
+    print(f"Image saved at {save_path}")
+    
+    # Optionally show the image as well
     plt.show()
 
-# Example of how to use it with an image from a batch (assuming you have a tensor)
-# For a batch of images, take one image by selecting the first tensor
- # Replace 'images[0]' with your image tensor
+    # Close the figure to prevent memory issues
+    plt.close(fig)
 
 
 # def show_batch(images):
