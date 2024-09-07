@@ -164,6 +164,10 @@ class MainNet(nn.Module):
         coordinates = torch.tensor(AOLM(fm.detach(), conv5_b.detach()))
         #x_lefttop, y_lefttop, x_rightlow, y_rightlow
         #print(f"x_lefttop:{coordinates[0]},y_lefttop: {coordinates[1]}, x_rightlow: {coordinates[2]},y_rightlow: {coordinates[3]}")
+        x_lefttop = coordinates[0]
+        x_rightlow = coordinates[2]
+        y_lefttop = coordinates[1]
+        y_rightlow = coordinates[3]
         image_box = fm[x_leftop:x_rightlow, y_leftop:y_rightlow, :]
         print(f"image box: {image_box}")
         plot_and_save_image(image_box .detach())
