@@ -23,24 +23,6 @@ from torchvision.utils import make_grid
 #     plt.show()
 
 
-def show_batch(images):
-    j = 0
-    print("Image batch shape:", images.shape)
-    
-    # Iterate through the batch of images
-    for image in images:
-        image = image[:3, :, :]  # Take the first 3 channels
-        print("Image shape after selecting 3 channels:", image.shape)
-        
-        # Create a plot for each image
-        fig, ax = plt.subplots(figsize=(2, 2))  # Slightly larger figure
-        ax.imshow(image.permute(1, 2, 0))  # Rearrange for visualization (H, W, C)
-        plt.show()
-        plt.close(fig)
-        
-        j += 1
-        if j == 4:  # Show only the first 5 images
-            break
 
 
 
@@ -249,7 +231,6 @@ class ResNet(nn.Module):
 
         fm = x
         #print("fm", fm.shape)
-        show_batch(fm.detach().cpu())
         x = self.avgpool(x)
         #print("avgpool", x.shape)
         x = x.view(x.size(0), -1)
