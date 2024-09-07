@@ -153,7 +153,7 @@ class MainNet(nn.Module):
 
     def forward(self, x, epoch, batch_idx, status='test', DEVICE= device):
         fm, embedding, conv5_b = self.pretrained_model(x)
-        plot_and_save_image(fm[0].detach())
+        #plot_and_save_image(fm[0].detach())
         batch_size, channel_size, side_size, _ = fm.shape
         assert channel_size == 2048 # 512 change by diallo
 
@@ -163,7 +163,10 @@ class MainNet(nn.Module):
         #SCDA
         coordinates = torch.tensor(AOLM(fm.detach(), conv5_b.detach()))
         #x_lefttop, y_lefttop, x_rightlow, y_rightlow
-        print(f"x_lefttop:{coordinates[0]},y_lefttop: {coordinates[1]}, x_rightlow: {coordinates[2]},y_rightlow: {coordinates[3]}")
+        #print(f"x_lefttop:{coordinates[0]},y_lefttop: {coordinates[1]}, x_rightlow: {coordinates[2]},y_rightlow: {coordinates[3]}")
+        image_box = fm[x_leftop:x_rightlow, y_leftop:y_rightlow, :]
+        print(f"image box: {image_box}")
+        plot_and_save_image(image_box .detach())
 
         local_imgs = torch.zeros([batch_size, 3, 448, 448]).to(DEVICE)  # [N, 3, 448, 448]
         for i in range(batch_size):
