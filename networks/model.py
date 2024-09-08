@@ -13,81 +13,36 @@ import matplotlib.pyplot as plt
 import os
 
 
-# def extract_important_region(feature_maps,input_image, threshold=0.5):
-#     # Step 1: Generate Feature Maps
-#     #feature_maps = model.forward(input_image)  # Replace with your CNN model
-    
-#     # Step 2: Aggregate Feature Maps into Activation Map
-#     activation_map = torch.mean(feature_maps, dim=1)  # Average pooling along channels
-    
-#     # Step 3: Threshold to create binary mask
-#     binary_mask = activation_map > threshold
-    
-#     # Step 4: Find bounding box coordinates
-#     mask_np = binary_mask.cpu().numpy()[0]  # Convert to NumPy and select the first batch
-#     coords = np.argwhere(mask_np)
-#     top_left = coords.min(axis=0)
-#     bottom_right = coords.max(axis=0)
-    
-#     # Step 5: Crop the important region
-#     cropped_image = input_image[:, :, top_left[0]:bottom_right[0], top_left[1]:bottom_right[1]]
-#     print("cropped image",cropped_image.shape)
-    
-#     # Visualize cropped region
-#     #plt.imshow(cropped_image[0].permute(1, 2, 0).cpu().numpy())
-#     #plt.show()
-    
-    
-#     return cropped_image
+def resize_activation_map(activation_map, target_size=(48, 48)):
+    # Add a batch dimension and a channel dimension (if not present) 
+    # before interpolation if the shape is [6, 14, 14]
+    activation_map = activation_map.unsqueeze(1)  # Shape becomes [6, 1, 14, 14]
 
-import torch
-from skimage import measure  # for region properties and labeling
-import matplotlib.pyplot as plt
+    # Resize the activation map
+    resized_map = F.interpolate(activation_map, size=target_size, mode='bilinear', align_corners=False)
 
-# Assuming you have defined the AOLM function you provided
+    # Remove the channel dimension after interpolation (optional)
+    resized_map = resized_map.squeeze(1)  # Shape becomes [6, 48, 48]
 
-# # Function to crop the most important region
-# def crop_using_bounding_box(input_image, feature_map, save_dir="./images/"):
+    return resized_map
 
-#     # Create the save directory if it doesn't exist
-#     print("feature map shape:", feature_map.shape)
-#     # Step 2: Aggregate Feature Maps into Activation Map
-#     activation_map = torch.mean(feature_map, dim=1)  # Average pooling along channels
-#     print("activation map shape: ", activation_map.shape)
+# Example usage
+activation_map = torch.randn(6, 14, 14)  # Random tensor for demonstration
+resized_map = resize_activation_map(activation_map)
 
-#     os.makedirs(save_dir, exist_ok=True)
+# Check the shape of the resized activation map
+print(f"Resized activation map shape: {resized_map.shape}")
 
-#     # Step 2: Get bounding box coordinates using AOLM
-#     #coordinates = AOLM(fms, fm1)
 
-#     # # Step 3: Loop through each image in the batch and crop
-#     # cropped_images = []
-#     # for i, (x_lefttop, y_lefttop, x_rightlow, y_rightlow) in enumerate(coordinates):
-#     #     # Convert coordinates to integer values
-#     #     x_lefttop, y_lefttop = int(x_lefttop), int(y_lefttop)
-#     #     x_rightlow, y_rightlow = int(x_rightlow), int(y_rightlow)
 
-#     #     # Crop the image using the coordinates
-#     #     cropped_image = input_image[i, :, x_lefttop:x_rightlow, y_lefttop:y_rightlow]
-
-#     #     # Append the cropped image to the list
-#     #     cropped_images.append(cropped_image)
-
-#     # Optionally visualize the cropped region
-#     cropped_image = activation_map[:3, :, :] 
-#     plt.imshow(cropped_image.detach().permute(1, 2, 0).cpu().numpy())
-#     plt.show()
-#     # Save each image
-#     save_path = os.path.join(save_dir, f"cropped_image_{1}.png")
-#     plt.savefig(save_path, bbox_inches='tight')  # Save the image
-#     print(f"Cropped image {1} saved at {save_path}")
 
 
 
 
 def crop_and_save_activation_maps(features_map, coordinates, save_dir="./cropped_activation_maps/"):
     activation_map = torch.mean(features_map, dim=1)  # Average pooling along channels
-    print("activation map shape: ", activation_map.shape)
+    resized_activation_map = resize_activation_map(activation_map)
+    print("activation map shape: ", resized_activation_map.shape)
     # Create the save directory if it doesn't exist
     os.makedirs(save_dir, exist_ok=True)
 
@@ -99,7 +54,7 @@ def crop_and_save_activation_maps(features_map, coordinates, save_dir="./cropped
         x_rightlow, y_rightlow = int(x_rightlow), int(y_rightlow)
 
         # Crop the activation map using the coordinates
-        cropped_map = activation_map[i, x_lefttop:x_rightlow, y_lefttop:y_rightlow]
+        cropped_map = resized_activation_map[i, x_lefttop:x_rightlow, y_lefttop:y_rightlow]
         print("cropped_map",cropped_map.shape)
 
         # Append the cropped activation map to the list
