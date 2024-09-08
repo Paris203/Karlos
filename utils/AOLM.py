@@ -24,6 +24,7 @@ def AOLM(fms, fm1):
         print(f"m shape inside the loop :{m.shape}")
         mask_np = m.cpu().numpy().reshape(14, 14)
         component_labels = measure.label(mask_np)
+        print(f"component_labels shape {component_labels.shape}")
 
         properties = measure.regionprops(component_labels)
         areas = []
