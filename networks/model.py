@@ -19,7 +19,7 @@ def plot_and_save_image(image_tensor, save_path="./saved_image.png"):
     print(image.shape)
     image = image[0]    
     # Normalize the image to the range [0, 1] (optional)
-    #image = (image - image.min()) / (image.max() - image.min())
+    image = (image - image.min()) / (image.max() - image.min())
     
     # Select the first 3 channels if the image has more than 3 (for RGB)
     if image.shape[0] > 3:
