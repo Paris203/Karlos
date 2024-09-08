@@ -47,10 +47,14 @@ import matplotlib.pyplot as plt
 # Assuming you have defined the AOLM function you provided
 
 # Function to crop the most important region
-def crop_using_bounding_box(input_image, coordinates):
+def crop_using_bounding_box(input_image, coordinates, save_dir="./images/"):
     # Step 1: Forward pass to get feature maps
     #fms = model.forward(input_image)  # First set of feature maps
     #fm1 = fms  # You can use a different set of feature maps if needed
+    
+    # Create the save directory if it doesn't exist
+
+    os.makedirs(save_dir, exist_ok=True)
 
     # Step 2: Get bounding box coordinates using AOLM
     #coordinates = AOLM(fms, fm1)
