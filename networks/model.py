@@ -163,23 +163,14 @@ class MainNet(nn.Module):
         #SCDA
         coordinates = torch.tensor(AOLM(fm.detach(), conv5_b.detach()))
         #x_lefttop, y_lefttop, x_rightlow, y_rightlow
-        print(coordinates.shape), print(f"fm shape{fm.shape}")
-        print(f"x_lefttop:{coordinates[0]},y_lefttop: {coordinates[1]}, x_rightlow: {coordinates[2]},y_rightlow: {coordinates[3]}, len of the coordinates: {len(coordinates)}")
-        
-        x_lefttop = coordinates[0]
-        x_rightlow = coordinates[2]
-        y_lefttop = coordinates[1]
-        y_rightlow = coordinates[3]
-        print(f"x_lefttop:{ x_lefttop },y_lefttop: { y_lefttop}, x_rightlow: {x_rightlow},y_rightlow: { y_rightlow}, len of the coordinates: {coordinates}")
-        image_box = fm[:, :, x_lefttop[0]:x_rightlow[0], y_lefttop[0]:y_rightlow[0]]
-        print(f"image box: {image_box.shape}")
-        plot_and_save_image(image_box[0].detach())
+
 
         local_imgs = torch.zeros([batch_size, 3, 448, 448]).to(DEVICE)  # [N, 3, 448, 448]
         for i in range(batch_size):
             [x0, y0, x1, y1] = coordinates[i]
             local_imgs[i:i + 1] = F.interpolate(x[i:i + 1, :, x0:(x1+1), y0:(y1+1)], size=(448, 448),
                                                 mode='bilinear', align_corners=True)  # [N, 3, 224, 224]
+        plot_and_save_image(local_imgs)
         local_fm, local_embeddings, _ = self.pretrained_model(local_imgs.detach())  # [N, 2048]
         local_logits = self.rawcls_net(local_embeddings)  # [N, 200]
 
