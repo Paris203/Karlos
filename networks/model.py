@@ -33,7 +33,7 @@ def extract_important_region(feature_maps,input_image, threshold=0.5):
     print("cropped image",cropped_image.shape)
     
     # Visualize cropped region
-    plt.imshow(cropped_image.permute(1, 2, 0).cpu().numpy())
+    plt.imshow(cropped_image[0].permute(1, 2, 0).cpu().numpy())
     plt.show()
     
     return cropped_image
