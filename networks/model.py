@@ -171,8 +171,9 @@ class MainNet(nn.Module):
             [x0, y0, x1, y1] = coordinates[i]
             local_imgs[i:i + 1] = F.interpolate(x[i:i + 1, :, x0:(x1+1), y0:(y1+1)], size=(448, 448),
                                                 mode='bilinear', align_corners=True)  # [N, 3, 224, 224]
-        plot_and_save_image(local_imgs)
+        #plot_and_save_image(local_imgs)
         local_fm, local_embeddings, _ = self.pretrained_model(local_imgs.detach())  # [N, 2048]
+        plot_and_save_image(local_fm)
         local_logits = self.rawcls_net(local_embeddings)  # [N, 200]
 
         proposalN_indices, proposalN_windows_scores, window_scores \
