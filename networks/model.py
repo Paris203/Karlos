@@ -63,26 +63,27 @@ def crop_using_bounding_box(input_image, coordinates, save_dir="./images/"):
     # Step 2: Get bounding box coordinates using AOLM
     #coordinates = AOLM(fms, fm1)
 
-    # Step 3: Loop through each image in the batch and crop
-    cropped_images = []
-    for i, (x_lefttop, y_lefttop, x_rightlow, y_rightlow) in enumerate(coordinates):
-        # Convert coordinates to integer values
-        x_lefttop, y_lefttop = int(x_lefttop), int(y_lefttop)
-        x_rightlow, y_rightlow = int(x_rightlow), int(y_rightlow)
+    # # Step 3: Loop through each image in the batch and crop
+    # cropped_images = []
+    # for i, (x_lefttop, y_lefttop, x_rightlow, y_rightlow) in enumerate(coordinates):
+    #     # Convert coordinates to integer values
+    #     x_lefttop, y_lefttop = int(x_lefttop), int(y_lefttop)
+    #     x_rightlow, y_rightlow = int(x_rightlow), int(y_rightlow)
 
-        # Crop the image using the coordinates
-        cropped_image = input_image[i, :, x_lefttop:x_rightlow, y_lefttop:y_rightlow]
+    #     # Crop the image using the coordinates
+    #     cropped_image = input_image[i, :, x_lefttop:x_rightlow, y_lefttop:y_rightlow]
 
-        # Append the cropped image to the list
-        cropped_images.append(cropped_image)
+    #     # Append the cropped image to the list
+    #     cropped_images.append(cropped_image)
 
         # Optionally visualize the cropped region
+        cropped_image = activation_map[:3, :, :] 
         plt.imshow(cropped_image.permute(1, 2, 0).cpu().numpy())
         plt.show()
         # Save each image
-        save_path = os.path.join(save_dir, f"cropped_image_{i + 1}.png")
+        save_path = os.path.join(save_dir, f"cropped_image_{1}.png")
         plt.savefig(save_path, bbox_inches='tight')  # Save the image
-        print(f"Cropped image {i + 1} saved at {save_path}")
+        print(f"Cropped image {1} saved at {save_path}")
 
 
 # Example usage:
