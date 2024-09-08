@@ -16,7 +16,8 @@ import matplotlib.pyplot as plt
 def plot_and_save_image(image_tensor, save_path="./saved_image.png"):
     # Ensure the tensor is on the CPU and normalized (if necessary)
     image = image_tensor.cpu() if image_tensor.is_cuda else image_tensor
-    
+    print(image.shape)
+    image = image[0]    
     # Normalize the image to the range [0, 1] (optional)
     #image = (image - image.min()) / (image.max() - image.min())
     
