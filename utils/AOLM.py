@@ -21,6 +21,7 @@ def AOLM(fms, fm1):
 
     coordinates = []
     for i, m in enumerate(M):
+        print(f"m shape inside the loop :{m.shape}")
         mask_np = m.cpu().numpy().reshape(14, 14)
         component_labels = measure.label(mask_np)
 
