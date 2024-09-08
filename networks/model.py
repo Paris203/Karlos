@@ -241,9 +241,6 @@ class MainNet(nn.Module):
         #plot_and_save_images(local_imgs)
         local_fm, local_embeddings, _ = self.pretrained_model(local_imgs.detach())  # [N, 2048]
         crop_using_bounding_box(local_imgs,coordinates)
-        #image_crop = extract_important_region(local_fm, local_imgs, threshold=0.5)
-        #plot_and_save_images(image_crop)
-        #plot_and_save_images(local_fms.detach())
         local_logits = self.rawcls_net(local_embeddings)  # [N, 200]
 
         proposalN_indices, proposalN_windows_scores, window_scores \
