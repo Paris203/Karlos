@@ -52,7 +52,7 @@ def crop_using_bounding_box(input_image, coordinates):
     #fm1 = fms  # You can use a different set of feature maps if needed
 
     # Step 2: Get bounding box coordinates using AOLM
-    coordinates = AOLM(fms, fm1)
+    #coordinates = AOLM(fms, fm1)
 
     # Step 3: Loop through each image in the batch and crop
     cropped_images = []
