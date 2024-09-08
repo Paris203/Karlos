@@ -11,59 +11,50 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 import matplotlib.pyplot as plt
 
-import matplotlib.pyplot as plt
-
-def plot_and_save_image(image_tensor, save_path="./saved_image.png"):
-    # Ensure the tensor is on the CPU and normalized (if necessary)
-    image = image_tensor.cpu() if image_tensor.is_cuda else image_tensor
-    print(image.shape)
-    image = image[0]    
-    # Normalize the image to the range [0, 1] (optional)
-    image = (image - image.min()) / (image.max() - image.min())
-    
-    # Select the first 3 channels if the image has more than 3 (for RGB)
-    if image.shape[0] > 3:
-        image = image[:3, :, :]
-    
-    # Permute the dimensions to (Height, Width, Channels)
-    image = image.permute(1, 2, 0)
-    
-    # Plot the image using matplotlib
-    fig, ax = plt.subplots(figsize=(5, 5))  # Create the figure and axis
-    ax.imshow(image.numpy())  # Convert tensor to NumPy and display the image
-    plt.axis('off')  # Turn off axis for cleaner image display
-
-    # Save the image to the specified path
-    plt.savefig(save_path, bbox_inches='tight')  # Save with tight bounding box
-    print(f"Image saved at {save_path}")
-    
-    # Optionally show the image as well
-    plt.show()
-
-    # Close the figure to prevent memory issues
-    plt.close(fig)
 
 
-# def show_batch(images):
-#     j = 0
-#     print("Image batch shape:", type(images))
+def plot_and_save_images(batch_tensor, save_dir="./images/"):
+    # Ensure the batch is on the CPU
+    batch = batch_tensor.cpu() if batch_tensor.is_cuda else batch_tensor
+    print(f"Batch shape: {batch.shape}")  # Expecting shape (batch_size, channels, height, width)
     
-#     # Iterate through the batch of images
-#     for image in images:
-#         image = image[:3, :, :]  # Take the first 3 channels
-#         print("Image shape after selecting 3 channels:", image.shape)
+    # Create the save directory if it doesn't exist
+    import os
+    os.makedirs(save_dir, exist_ok=True)
+    
+    batch_size = batch.shape[0]
+    
+    for i in range(batch_size):
+        image = batch[i]
         
-#         # Create a plot for each image
-#         #fig, ax = plt.subplots(figsize=(2, 2))  # Slightly larger figure
-#         #ax.imshow(image.permute(1, 2, 0))  # Rearrange for visualization (H, W, C)
-#         #plt.show()
-#         #plt.close(fig)
-#         plot_image(images[0]) 
+        # Normalize the image to the range [0, 1]
+        image = (image - image.min()) / (image.max() - image.min())
         
-#         j += 1
-#         if j == 4:  # Show only the first 5 images
-#             break
-#         break
+        # Select the first 3 channels if the image has more than 3 (for RGB)
+        if image.shape[0] > 3:
+            image = image[:3, :, :]
+        
+        # Permute the dimensions to (Height, Width, Channels)
+        image = image.permute(1, 2, 0)
+        
+        # Plot the image using matplotlib
+        fig, ax = plt.subplots(figsize=(5, 5))
+        ax.imshow(image.numpy())
+        plt.axis('off')  # Turn off axis for cleaner image display
+        
+        # Save the image to the specified path
+        save_path = os.path.join(save_dir, f"image_{i+1}.png")
+        plt.savefig(save_path, bbox_inches='tight')
+        print(f"Image saved at {save_path}")
+        
+        # Close the figure to prevent memory issues
+        plt.close(fig)
+
+# Example usage:
+# plot_and_save_images(batch_of_images, save_dir="./saved_images/")
+
+
+
 
 
 
