@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 import matplotlib.pyplot as plt
+import os
 
 
 # def extract_important_region(feature_maps,input_image, threshold=0.5):
@@ -89,7 +90,7 @@ def plot_and_save_images(batch_tensor, save_dir="./images/"):
     print(f"Batch shape: {batch_tensor}")  # Expecting shape (batch_size, channels, height, width)
     
     # Create the save directory if it doesn't exist
-    import os
+
     os.makedirs(save_dir, exist_ok=True)
     
     batch_size = batch_tensor
