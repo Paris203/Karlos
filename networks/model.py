@@ -173,7 +173,7 @@ class MainNet(nn.Module):
                                                 mode='bilinear', align_corners=True)  # [N, 3, 224, 224]
         #plot_and_save_image(local_imgs)
         local_fm, local_embeddings, _ = self.pretrained_model(local_imgs.detach())  # [N, 2048]
-        plot_and_save_image(local_fm)
+        plot_and_save_image(local_fm.detach())
         local_logits = self.rawcls_net(local_embeddings)  # [N, 200]
 
         proposalN_indices, proposalN_windows_scores, window_scores \
