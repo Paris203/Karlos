@@ -33,8 +33,9 @@ def extract_important_region(feature_maps,input_image, threshold=0.5):
     print("cropped image",cropped_image.shape)
     
     # Visualize cropped region
-    plt.imshow(cropped_image[0].permute(1, 2, 0).cpu().numpy())
-    plt.show()
+    #plt.imshow(cropped_image[0].permute(1, 2, 0).cpu().numpy())
+    #plt.show()
+    
     
     return cropped_image
 
@@ -192,7 +193,8 @@ class MainNet(nn.Module):
                                                 mode='bilinear', align_corners=True)  # [N, 3, 224, 224]
         #plot_and_save_images(local_imgs)
         local_fm, local_embeddings, _ = self.pretrained_model(local_imgs.detach())  # [N, 2048]
-        extract_important_region(local_fm, local_imgs, threshold=0.5)
+        image_crop = extract_important_region(local_fm, local_imgs, threshold=0.5)
+        plot_and_save_images(image_crop):
         #plot_and_save_images(local_fms.detach())
         local_logits = self.rawcls_net(local_embeddings)  # [N, 200]
 
