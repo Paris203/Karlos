@@ -12,6 +12,34 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 import matplotlib.pyplot as plt
 
 
+def extract_important_region(feature_maps, threshold=0.5):
+    # Step 1: Generate Feature Maps
+    #feature_maps = model.forward(input_image)  # Replace with your CNN model
+    
+    # Step 2: Aggregate Feature Maps into Activation Map
+    activation_map = torch.mean(feature_maps, dim=1)  # Average pooling along channels
+    
+    # Step 3: Threshold to create binary mask
+    binary_mask = activation_map > threshold
+    
+    # Step 4: Find bounding box coordinates
+    mask_np = binary_mask.cpu().numpy()[0]  # Convert to NumPy and select the first batch
+    coords = np.argwhere(mask_np)
+    top_left = coords.min(axis=0)
+    bottom_right = coords.max(axis=0)
+    
+    # Step 5: Crop the important region
+    cropped_image = input_image[:, :, top_left[0]:bottom_right[0], top_left[1]:bottom_right[1]]
+    print("cropped image",cropped_image.shape)
+    
+    # Visualize cropped region
+    plt.imshow(cropped_image.permute(1, 2, 0).cpu().numpy())
+    plt.show()
+    
+    return cropped_image
+
+
+
 
 def plot_and_save_images(batch_tensor, save_dir="./images/"):
     # Ensure the batch is on the CPU
@@ -164,7 +192,8 @@ class MainNet(nn.Module):
                                                 mode='bilinear', align_corners=True)  # [N, 3, 224, 224]
         #plot_and_save_images(local_imgs)
         local_fm, local_embeddings, _ = self.pretrained_model(local_imgs.detach())  # [N, 2048]
-        plot_and_save_images(local_embeddings.detach())
+        extract_important_region(local_fm, threshold=0.5)
+        #plot_and_save_images(local_fms.detach())
         local_logits = self.rawcls_net(local_embeddings)  # [N, 200]
 
         proposalN_indices, proposalN_windows_scores, window_scores \
