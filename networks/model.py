@@ -278,6 +278,8 @@ class MainNet(nn.Module):
                                                 mode='bilinear', align_corners=True)  # [N, 3, 224, 224]
         #plot_and_save_images(local_imgs)
         local_fm, local_embeddings, _ = self.pretrained_model(local_imgs.detach())  # [N, 2048]
+
+        print("Coordinates: ",coordinates[0],coordinates[1],coordinates1],coordinates[3],coordinates[4],coordinates[5])
         crop_and_save_activation_maps(local_fm.detach(), coordinates)
         local_logits = self.rawcls_net(local_embeddings)  # [N, 200]
 
