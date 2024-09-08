@@ -89,7 +89,7 @@ def plot_and_save_images(batch_tensor, save_dir="./images/"):
     import os
     os.makedirs(save_dir, exist_ok=True)
     
-    batch_size = batch_tensor[0][0]
+    batch_size = batch_tensor
     print(batch_size.shape)
     
     for i in range(6):
