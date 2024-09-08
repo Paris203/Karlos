@@ -86,7 +86,7 @@ import matplotlib.pyplot as plt
 
 
 def crop_and_save_activation_maps(features_map, coordinates, save_dir="./cropped_activation_maps/"):
-    activation_map = torch.mean(feature_map, dim=1)  # Average pooling along channels
+    activation_map = torch.mean(features_map, dim=1)  # Average pooling along channels
     print("activation map shape: ", activation_map.shape)
     # Create the save directory if it doesn't exist
     os.makedirs(save_dir, exist_ok=True)
