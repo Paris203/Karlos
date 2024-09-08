@@ -53,6 +53,7 @@ def crop_using_bounding_box(input_image, coordinates, save_dir="./images/"):
     #fm1 = fms  # You can use a different set of feature maps if needed
     
     # Create the save directory if it doesn't exist
+    print(coordinates.shape)
 
     os.makedirs(save_dir, exist_ok=True)
 
