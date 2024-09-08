@@ -3,19 +3,20 @@ from skimage import measure
 
 
 def AOLM(fms, fm1):
+    print(f"fms shape: {fms.shape}, fm1 shape :{fm1.shape}")
     A = torch.sum(fms, dim=1, keepdim=True)
-    print("A", A)
+    print("A shape", A.shape)
     a = torch.mean(A, dim=[2, 3], keepdim=True)
-    print("a",a)
+    print("a shape",a.shape)
     M = (A > a).float()
-    print("M", M)
+    print("M shape", M.shape)
 
     A1 = torch.sum(fm1, dim=1, keepdim=True)
-    print("A1", A1)
+    print("A1 shape", A1.shape)
     a1 = torch.mean(A1, dim=[2, 3], keepdim=True)
-    print("a1", a1)
+    print("a1 shape", a1.shape)
     M1 = (A1 > a1).float()
-    print("M1",M1)
+    print("M1 shape",M1.shape)
 
 
     coordinates = []
