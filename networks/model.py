@@ -165,10 +165,12 @@ class MainNet(nn.Module):
         #x_lefttop, y_lefttop, x_rightlow, y_rightlow
         print(coordinates.shape), print(f"fm shape{fm.shape}")
         print(f"x_lefttop:{coordinates[0]},y_lefttop: {coordinates[1]}, x_rightlow: {coordinates[2]},y_rightlow: {coordinates[3]}, len of the coordinates: {len(coordinates)}")
+        
         x_lefttop = coordinates[0]
         x_rightlow = coordinates[2]
         y_lefttop = coordinates[1]
         y_rightlow = coordinates[3]
+        print(f"x_lefttop:{ x_lefttop },y_lefttop: { y_lefttop}, x_rightlow: {x_rightlow},y_rightlow: { y_rightlow}, len of the coordinates: {coordinates}")
         image_box = fm[:, :, x_lefttop[0]:x_rightlow[0], y_lefttop[0]:y_rightlow[0]]
         print(f"image box: {image_box.shape}")
         plot_and_save_image(image_box[0].detach())
