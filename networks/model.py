@@ -83,13 +83,13 @@ def crop_using_bounding_box(input_image, coordinates):
 def plot_and_save_images(batch_tensor, save_dir="./images/"):
     # Ensure the batch is on the CPU
     #batch = batch_tensor.cpu() if batch_tensor.is_cuda else batch_tensor
-    print(f"Batch shape: {batch_tensor.shape}")  # Expecting shape (batch_size, channels, height, width)
+    print(f"Batch shape: {batch_tensor}")  # Expecting shape (batch_size, channels, height, width)
     
     # Create the save directory if it doesn't exist
     import os
     os.makedirs(save_dir, exist_ok=True)
     
-    batch_size = batch_tensor.shape[0]
+    batch_size = batch_tensor[0]
     
     for i in range(batch_size):
         image = batch[i]
