@@ -90,8 +90,9 @@ def plot_and_save_images(batch_tensor, save_dir="./images/"):
     os.makedirs(save_dir, exist_ok=True)
     
     batch_size = batch_tensor[0]
+    print(batch_size)
     
-    for i in range(batch_size):
+    for i in range(6):
         image = batch[i]
         
         # Normalize the image to the range [0, 1]
