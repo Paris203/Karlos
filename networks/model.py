@@ -268,7 +268,7 @@ class MainNet(nn.Module):
 
         #SCDA
         coordinates = torch.tensor(AOLM(fm.detach(), conv5_b.detach()))
-        #x_lefttop, y_lefttop, x_rightlow, y_rightlow
+        print(f"coordinates len:{coordinates}, coordinates values: {coordinates}")
 
 
         local_imgs = torch.zeros([batch_size, 3, 448, 448]).to(DEVICE)  # [N, 3, 448, 448]
@@ -279,7 +279,7 @@ class MainNet(nn.Module):
         #plot_and_save_images(local_imgs)
         local_fm, local_embeddings, _ = self.pretrained_model(local_imgs.detach())  # [N, 2048]
 
-        print("Coordinates: ",coordinates[0],coordinates[1],coordinates[2],coordinates[3],coordinates[4],coordinates[5])
+        #print("Coordinates: ",coordinates[0],coordinates[1],coordinates[2],coordinates[3],coordinates[4],coordinates[5])
         crop_and_save_activation_maps(local_fm.detach(), coordinates)
         local_logits = self.rawcls_net(local_embeddings)  # [N, 200]
 
