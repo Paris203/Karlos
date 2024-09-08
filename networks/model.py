@@ -12,7 +12,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 import matplotlib.pyplot as plt
 
 
-def extract_important_region(feature_maps,input_image threshold=0.5):
+def extract_important_region(feature_maps,input_image, threshold=0.5):
     # Step 1: Generate Feature Maps
     #feature_maps = model.forward(input_image)  # Replace with your CNN model
     
