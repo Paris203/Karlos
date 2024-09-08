@@ -70,8 +70,11 @@ def crop_using_bounding_box(input_image, coordinates):
         # Optionally visualize the cropped region
         plt.imshow(cropped_image.permute(1, 2, 0).cpu().numpy())
         plt.show()
+        # Save each image
+        save_path = os.path.join(save_dir, f"cropped_image_{i + 1}.png")
+        plt.savefig(save_path, bbox_inches='tight')  # Save the image
+        print(f"Cropped image {i + 1} saved at {save_path}")
 
-    return cropped_images
 
 # Example usage:
 # Assuming `input_image` is your batch of images and `model` is your pre-trained CNN
@@ -232,9 +235,9 @@ class MainNet(nn.Module):
                                                 mode='bilinear', align_corners=True)  # [N, 3, 224, 224]
         #plot_and_save_images(local_imgs)
         local_fm, local_embeddings, _ = self.pretrained_model(local_imgs.detach())  # [N, 2048]
-        image_crop = crop_using_bounding_box(local_imgs,coordinates)
+        crop_using_bounding_box(local_imgs,coordinates)
         #image_crop = extract_important_region(local_fm, local_imgs, threshold=0.5)
-        plot_and_save_images(image_crop)
+        #plot_and_save_images(image_crop)
         #plot_and_save_images(local_fms.detach())
         local_logits = self.rawcls_net(local_embeddings)  # [N, 200]
 
