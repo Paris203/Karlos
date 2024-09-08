@@ -53,7 +53,10 @@ def crop_using_bounding_box(input_image, coordinates, save_dir="./images/"):
     #fm1 = fms  # You can use a different set of feature maps if needed
     
     # Create the save directory if it doesn't exist
-    print(coordinates.shape)
+    print("feature map shape:", coordinates.shape)
+    # Step 2: Aggregate Feature Maps into Activation Map
+    activation_map = torch.mean(coordinates, dim=1)  # Average pooling along channels
+    print("activation map shape: ", activation_map.shape)
 
     os.makedirs(save_dir, exist_ok=True)
 
