@@ -169,7 +169,7 @@ class MainNet(nn.Module):
         x_rightlow = coordinates[2]
         y_lefttop = coordinates[1]
         y_rightlow = coordinates[3]
-        image_box = fm[:, :, x_lefttop[1]:x_rightlow[1], y_lefttop[0]:y_rightlow[0]]
+        image_box = fm[:, :, x_lefttop[0]:x_rightlow[0], y_lefttop[0]:y_rightlow[0]]
         print(f"image box: {image_box.shape}")
         plot_and_save_image(image_box[0].detach())
 
