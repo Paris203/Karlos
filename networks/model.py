@@ -76,14 +76,14 @@ def crop_using_bounding_box(input_image, coordinates, save_dir="./images/"):
     #     # Append the cropped image to the list
     #     cropped_images.append(cropped_image)
 
-        # Optionally visualize the cropped region
-        cropped_image = activation_map[:3, :, :] 
-        plt.imshow(cropped_image.permute(1, 2, 0).cpu().numpy())
-        plt.show()
-        # Save each image
-        save_path = os.path.join(save_dir, f"cropped_image_{1}.png")
-        plt.savefig(save_path, bbox_inches='tight')  # Save the image
-        print(f"Cropped image {1} saved at {save_path}")
+    # Optionally visualize the cropped region
+    cropped_image = activation_map[:3, :, :] 
+    plt.imshow(cropped_image.permute(1, 2, 0).cpu().numpy())
+    plt.show()
+    # Save each image
+    save_path = os.path.join(save_dir, f"cropped_image_{1}.png")
+    plt.savefig(save_path, bbox_inches='tight')  # Save the image
+    print(f"Cropped image {1} saved at {save_path}")
 
 
 # Example usage:
