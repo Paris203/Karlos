@@ -100,6 +100,7 @@ def crop_and_save_activation_maps(features_map, coordinates, save_dir="./cropped
 
         # Crop the activation map using the coordinates
         cropped_map = activation_map[i, x_lefttop:x_rightlow, y_lefttop:y_rightlow]
+        print("cropped_map",cropped_map.shape)
 
         # Append the cropped activation map to the list
         cropped_activation_maps.append(cropped_map)
