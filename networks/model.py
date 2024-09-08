@@ -46,49 +46,81 @@ import matplotlib.pyplot as plt
 
 # Assuming you have defined the AOLM function you provided
 
-# Function to crop the most important region
-def crop_using_bounding_box(input_image, coordinates, save_dir="./images/"):
-    # Step 1: Forward pass to get feature maps
-    #fms = model.forward(input_image)  # First set of feature maps
-    #fm1 = fms  # You can use a different set of feature maps if needed
-    
-    # Create the save directory if it doesn't exist
-    print("feature map shape:", coordinates.shape)
-    # Step 2: Aggregate Feature Maps into Activation Map
-    activation_map = torch.mean(coordinates, dim=1)  # Average pooling along channels
-    print("activation map shape: ", activation_map.shape)
+# # Function to crop the most important region
+# def crop_using_bounding_box(input_image, feature_map, save_dir="./images/"):
 
+#     # Create the save directory if it doesn't exist
+#     print("feature map shape:", feature_map.shape)
+#     # Step 2: Aggregate Feature Maps into Activation Map
+#     activation_map = torch.mean(feature_map, dim=1)  # Average pooling along channels
+#     print("activation map shape: ", activation_map.shape)
+
+#     os.makedirs(save_dir, exist_ok=True)
+
+#     # Step 2: Get bounding box coordinates using AOLM
+#     #coordinates = AOLM(fms, fm1)
+
+#     # # Step 3: Loop through each image in the batch and crop
+#     # cropped_images = []
+#     # for i, (x_lefttop, y_lefttop, x_rightlow, y_rightlow) in enumerate(coordinates):
+#     #     # Convert coordinates to integer values
+#     #     x_lefttop, y_lefttop = int(x_lefttop), int(y_lefttop)
+#     #     x_rightlow, y_rightlow = int(x_rightlow), int(y_rightlow)
+
+#     #     # Crop the image using the coordinates
+#     #     cropped_image = input_image[i, :, x_lefttop:x_rightlow, y_lefttop:y_rightlow]
+
+#     #     # Append the cropped image to the list
+#     #     cropped_images.append(cropped_image)
+
+#     # Optionally visualize the cropped region
+#     cropped_image = activation_map[:3, :, :] 
+#     plt.imshow(cropped_image.detach().permute(1, 2, 0).cpu().numpy())
+#     plt.show()
+#     # Save each image
+#     save_path = os.path.join(save_dir, f"cropped_image_{1}.png")
+#     plt.savefig(save_path, bbox_inches='tight')  # Save the image
+#     print(f"Cropped image {1} saved at {save_path}")
+
+
+
+
+def crop_and_save_activation_maps(features_map, coordinates, save_dir="./cropped_activation_maps/"):
+    activation_map = torch.mean(feature_map, dim=1)  # Average pooling along channels
+    print("activation map shape: ", activation_map.shape)
+    # Create the save directory if it doesn't exist
     os.makedirs(save_dir, exist_ok=True)
 
-    # Step 2: Get bounding box coordinates using AOLM
-    #coordinates = AOLM(fms, fm1)
+    # Step 3: Loop through each activation map in the batch and crop
+    cropped_activation_maps = []
+    for i, (x_lefttop, y_lefttop, x_rightlow, y_rightlow) in enumerate(coordinates):
+        # Convert coordinates to integer values
+        x_lefttop, y_lefttop = int(x_lefttop), int(y_lefttop)
+        x_rightlow, y_rightlow = int(x_rightlow), int(y_rightlow)
 
-    # # Step 3: Loop through each image in the batch and crop
-    # cropped_images = []
-    # for i, (x_lefttop, y_lefttop, x_rightlow, y_rightlow) in enumerate(coordinates):
-    #     # Convert coordinates to integer values
-    #     x_lefttop, y_lefttop = int(x_lefttop), int(y_lefttop)
-    #     x_rightlow, y_rightlow = int(x_rightlow), int(y_rightlow)
+        # Crop the activation map using the coordinates
+        cropped_map = activation_map[i, x_lefttop:x_rightlow, y_lefttop:y_rightlow]
 
-    #     # Crop the image using the coordinates
-    #     cropped_image = input_image[i, :, x_lefttop:x_rightlow, y_lefttop:y_rightlow]
+        # Append the cropped activation map to the list
+        cropped_activation_maps.append(cropped_map)
 
-    #     # Append the cropped image to the list
-    #     cropped_images.append(cropped_image)
+        # Plot the cropped region
+        plt.imshow(cropped_map.cpu().numpy(), cmap='hot')  # Hot colormap for activations
+        plt.axis('off')  # Turn off the axis for cleaner images
 
-    # Optionally visualize the cropped region
-    cropped_image = activation_map[:3, :, :] 
-    plt.imshow(cropped_image.detach().permute(1, 2, 0).cpu().numpy())
-    plt.show()
-    # Save each image
-    save_path = os.path.join(save_dir, f"cropped_image_{1}.png")
-    plt.savefig(save_path, bbox_inches='tight')  # Save the image
-    print(f"Cropped image {1} saved at {save_path}")
+        # Save each cropped activation map
+        save_path = os.path.join(save_dir, f"cropped_activation_map_{i + 1}.png")
+        plt.savefig(save_path, bbox_inches='tight')  # Save the image
+        print(f"Cropped activation map {i + 1} saved at {save_path}")
 
+        # Close the plot to prevent memory issues
+        plt.close()
+
+    return cropped_activation_maps
 
 # Example usage:
-# Assuming `input_image` is your batch of images and `model` is your pre-trained CNN
-# cropped_images = crop_using_bounding_box(input_image, model)
+# Assuming `activation_map` is your batch of activation maps [6,14,14] and `model` is your CNN
+# cropped_activation_maps = crop_and_save_activation_maps(activation_map, model, save_dir="./saved_cropped_activation_maps/")
 
 
 
@@ -245,7 +277,7 @@ class MainNet(nn.Module):
                                                 mode='bilinear', align_corners=True)  # [N, 3, 224, 224]
         #plot_and_save_images(local_imgs)
         local_fm, local_embeddings, _ = self.pretrained_model(local_imgs.detach())  # [N, 2048]
-        crop_using_bounding_box(local_imgs,local_fm)
+        crop_and_save_activation_maps(local_fm, coordinates)
         local_logits = self.rawcls_net(local_embeddings)  # [N, 200]
 
         proposalN_indices, proposalN_windows_scores, window_scores \
