@@ -93,7 +93,15 @@ def train(model,
             total_loss.backward()
 
             optimizer.step()
+        # Calculate number of correct predictions
+        _, predicted = torch.max(raw_logits, 1)
+        correct_predictions += (predicted == labels).sum().item()
+        total_samples += labels.size(0)
 
+        # Calculate and store training accuracy
+        raw_accuracy = correct_predictions / total_samples
+        train_metrics['raw_accuracy'].append(raw_accuracy)
+        
         scheduler.step()
 
         # Evaluation every epoch
@@ -141,8 +149,8 @@ def train(model,
                 'epoch': epoch,
                 'model_state_dict': model.state_dict(),
                 'learning_rate': lr,
-                'train_accuracy': train_metrics['raw_accuracy'][-1],
-                'test_accuracy': test_metrics['raw_accuracy'][-1],
+                'train_accuracy': train_metrics['raw_accuracy'][0],
+                'test_accuracy': test_metrics['raw_accuracy'][0],
             }, os.path.join(save_path, 'epoch' + str(epoch) + '.pth'))
 
         # Limit the number of checkpoints to max_checkpoint_num
