@@ -126,7 +126,7 @@ def train(model,
             # Plot training metrics
             plot_metrics(train_metrics, save_path, epoch, 'Train')
 
-        if epoch % 1 == 0:
+        if epoch % 5 == 0:
             # Eval test set
             raw_loss_avg, windowscls_loss_avg, total_loss_avg, raw_accuracy, local_accuracy, \
             local_loss_avg = eval(model, testloader, criterion, 'test', save_path, epoch)
