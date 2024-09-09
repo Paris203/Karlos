@@ -235,7 +235,8 @@ class MainNet(nn.Module):
         local_fm, local_embeddings, _ = self.pretrained_model(local_imgs.detach())  # [N, 2048]
 
         #print("Coordinates: ",coordinates[0],coordinates[1],coordinates[2],coordinates[3],coordinates[4],coordinates[5])
-        crop_and_save_activation_maps(local_fm.detach(), coordinates)
+        #crop_and_save_activation_maps(local_fm.detach(), coordinates)
+        
         local_logits = self.rawcls_net(local_embeddings)  # [N, 200]
 
         proposalN_indices, proposalN_windows_scores, window_scores \
