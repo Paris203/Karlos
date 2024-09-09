@@ -21,7 +21,7 @@ def eval(model, testloader, criterion, status, save_path, epoch):
     local_correct = 0
 
     with torch.no_grad():
-        for i, data in enumerate(tqdm(testloader)):
+        for i, data in enumerate(testloader):
             if set == 'CUB':
                 images, labels, boxes, scale = data
             else:
