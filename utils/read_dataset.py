@@ -33,6 +33,6 @@ def read_dataset(input_size, batch_size, root, set):
     else:
         print('Please choose supported dataset')
         os._exit()
-    print('size of train and test', len(trainloader), len(testloader))
+    #print('size of train and test', len(trainloader), len(testloader))
 
     return trainloader, testloader
