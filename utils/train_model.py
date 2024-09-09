@@ -94,12 +94,14 @@ def train(model,
 
             optimizer.step()
         # Calculate number of correct predictions
-        _, predicted = torch.max(raw_logits, 1)
-        correct_predictions += (predicted == labels).sum().item()
+        #_, predicted = torch.max(raw_logits, 1)
+        #correct_predictions += (predicted == labels).sum().item()
+        pred = raw_logits.max(1, keepdim=True)[1]
+        raw_correct += pred.eq(labels.view_as(pred)).sum().item()
         total_samples += labels.size(0)
 
         # Calculate and store training accuracy
-        raw_accuracy = correct_predictions / total_samples
+        raw_accuracy =  raw_correct / total_samples
         train_metrics['raw_accuracy'].append(raw_accuracy)
         
         scheduler.step()
