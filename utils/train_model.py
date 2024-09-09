@@ -70,7 +70,7 @@ def train(model,
         lr = next(iter(optimizer.param_groups))['lr']
         train_metrics['learning_rate'].append(lr)
 
-        for i, data in enumerate(tqdm(trainloader)):
+        for i, data in enumerate(trainloader):
             if set == 'CUB':
                 images, labels, _, _ = data
             else:
@@ -126,19 +126,20 @@ def train(model,
             # Plot training metrics
             plot_metrics(train_metrics, save_path, epoch, 'Train')
 
-        # Eval test set
-        raw_loss_avg, windowscls_loss_avg, total_loss_avg, raw_accuracy, local_accuracy, \
-        local_loss_avg = eval(model, testloader, criterion, 'test', save_path, epoch)
-
-        print(f'Test set: raw accuracy: {100. * raw_accuracy:.2f}%, local accuracy: {100. * local_accuracy:.2f}%')
-
-        # Store metrics
-        test_metrics['raw_accuracy'].append(raw_accuracy)
-        test_metrics['local_accuracy'].append(local_accuracy)
-        test_metrics['raw_loss_avg'].append(raw_loss_avg)
-        test_metrics['local_loss_avg'].append(local_loss_avg)
-        test_metrics['windowscls_loss_avg'].append(windowscls_loss_avg)
-        test_metrics['total_loss_avg'].append(total_loss_avg)
+        if epoch % 10 == 0:
+            # Eval test set
+            raw_loss_avg, windowscls_loss_avg, total_loss_avg, raw_accuracy, local_accuracy, \
+            local_loss_avg = eval(model, testloader, criterion, 'test', save_path, epoch)
+    
+            print(f'Test set: raw accuracy: {100. * raw_accuracy:.2f}%, local accuracy: {100. * local_accuracy:.2f}%')
+    
+            # Store metrics
+            test_metrics['raw_accuracy'].append(raw_accuracy)
+            test_metrics['local_accuracy'].append(local_accuracy)
+            test_metrics['raw_loss_avg'].append(raw_loss_avg)
+            test_metrics['local_loss_avg'].append(local_loss_avg)
+            test_metrics['windowscls_loss_avg'].append(windowscls_loss_avg)
+            test_metrics['total_loss_avg'].append(total_loss_avg)
 
         # Plot test metrics
         plot_metrics(test_metrics, save_path, epoch, 'Test')
