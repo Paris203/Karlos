@@ -31,7 +31,7 @@ activation_map = torch.randn(6, 14, 14)  # Random tensor for demonstration
 resized_map = resize_activation_map(activation_map)
 
 # Check the shape of the resized activation map
-print(f"Resized activation map shape: {resized_map.shape}")
+#print(f"Resized activation map shape: {resized_map.shape}")
 
 
 
