@@ -59,6 +59,7 @@ def train(model,
         'windowscls_loss_avg': [],
         'total_loss_avg': []
     }
+    raw_correct = 0
 
     for epoch in range(start_epoch + 1, end_epoch + 1):
         model.train()
