@@ -157,7 +157,6 @@ def train(model,
                 'model_state_dict': model.state_dict(),
                 'learning_rate': lr,
                 'train_accuracy': train_metrics['raw_accuracy'][-1],
-                'test_accuracy': test_metrics['raw_accuracy'][-1],
             }, os.path.join(save_path, 'epoch' + str(epoch) + '.pth'))
 
         # Limit the number of checkpoints to max_checkpoint_num
