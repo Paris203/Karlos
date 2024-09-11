@@ -10,7 +10,7 @@ from utils.eval_model import eval
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
-def load_checkpoint(checkpoint_path, model, optimizer=None):
+def load_checkpoint(checkpoint_path, model):
     """
     Loads the model parameters from a checkpoint file.
     """
@@ -21,12 +21,7 @@ def load_checkpoint(checkpoint_path, model, optimizer=None):
         # Load model state dictionary
         model.load_state_dict(checkpoint['model_state_dict'])
         print("Model loaded successfully.")
-        
-        # If an optimizer was provided, load the optimizer state
-        if optimizer:
-            optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-            print("Optimizer state loaded successfully.")
-        
+    
 
         epoch = checkpoint['epoch']
         learning_rate = checkpoint['learning_rate']
@@ -107,7 +102,7 @@ def train(model,
     }
     # Load checkpoint if provided
     if load_checkpoint_path:
-        start_epoch, lr, train_acc = load_checkpoint(load_checkpoint_path, model, optimizer)
+        start_epoch, lr, train_acc = load_checkpoint(load_checkpoint_path, model)
         print(f"Resuming training from epoch {start_epoch + 1}")
     else:
         print(f"Starting training from scratch at epoch {start_epoch + 1}")
