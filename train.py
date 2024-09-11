@@ -6,7 +6,7 @@ import shutil
 import time
 from config import num_classes, model_name, model_path, lr_milestones, lr_decay_rate, input_size, \
     root, end_epoch, save_interval, init_lr, batch_size, CUDA_VISIBLE_DEVICES, weight_decay, \
-    proposalN, set, channels
+    proposalN, set, channels, load_checkpoint_path
 from utils.train_model import train
 from utils.read_dataset import read_dataset
 from utils.auto_laod_resume import auto_load_resume
