@@ -15,7 +15,7 @@ def load_checkpoint(checkpoint_path, model):
     Loads the model parameters from a checkpoint file and prints the keys in the checkpoint.
     """
     if os.path.isfile(checkpoint_path):
-        print(f"Loading checkpoint '{checkpoint_path}'")
+        #print(f"Loading checkpoint '{checkpoint_path}'")
         checkpoint = torch.load(checkpoint_path, weights_only=True)
 
 
@@ -28,7 +28,7 @@ def load_checkpoint(checkpoint_path, model):
         learning_rate = checkpoint['learning_rate']
         train_accuracy = checkpoint.get('train_accuracy', None)
 
-        print(f"Checkpoint loaded from epoch {epoch}, with learning rate {learning_rate:.6f} and train accuracy {train_accuracy:.4f}")
+        print(f"Checkpoint loaded from epoch {epoch}, with learning rate {learning_rate} and train accuracy {train_accuracy:.3f}")
         
         return epoch, learning_rate, train_accuracy
     else:
@@ -110,7 +110,7 @@ def train(model,
     if load_checkpoint_path:
         start_epoch, lr, train_acc = load_checkpoint(load_checkpoint_path, model)
         print(f"Resuming training from epoch {start_epoch + 1}")
-        print(f"Checkpoint loaded from epoch {start_epoch}, with learning rate {lr:.6f} and train accuracy { train_acc :.4f}")
+        # print(f"Checkpoint loaded from epoch {start_epoch}, with learning rate {lr:.6f} and train accuracy { train_acc :.4f}")
     else:
         print(f"Starting training from scratch at epoch {start_epoch + 1}")
         
