@@ -54,13 +54,17 @@ def create_directories(save_path, checkpoint_path):
 def plot_metrics(metrics, save_path, epoch, phase):
     """Plots the training/testing metrics."""
     for metric_name, values in metrics.items():
+        # Ensure the length of x (epochs) matches the length of y (metric values)
+        epochs = range(1, len(values) + 1)
+
         plt.figure()
-        plt.plot(range(1, epoch + 1), values)
+        plt.plot(epochs, values)  # Use 'epochs' instead of 'range(1, epoch + 1)'
         plt.title(f'{phase} {metric_name} over epochs')
         plt.xlabel('Epoch')
         plt.ylabel(metric_name)
         plt.savefig(os.path.join(save_path, f'{phase}_{metric_name}_epoch_{epoch}.png'))
         plt.close()
+
 
 def save_accuracies(epoch, train_accuracy, test_accuracy, save_path):
     """Saves train and test accuracies to a CSV file."""
