@@ -6,7 +6,18 @@ import csv
 from tqdm import tqdm
 from config import max_checkpoint_num, proposalN, eval_trainset, set
 from utils.eval_model import eval
+
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+def create_directories(save_path, checkpoint_path):
+    """Create directories if they do not exist."""
+    if not os.path.exists(save_path):
+        os.makedirs(save_path)
+        print(f"Created directory for saving metrics: {save_path}")
+    
+    if not os.path.exists(checkpoint_path):
+        os.makedirs(checkpoint_path)
+        print(f"Created directory for saving checkpoints: {checkpoint_path}")
 
 def plot_metrics(metrics, save_path, epoch, phase):
     """Plots the training/testing metrics."""
@@ -36,10 +47,14 @@ def train(model,
           criterion,
           optimizer,
           scheduler,
-          save_path,
+          save_path,        # Folder for metrics
+          checkpoint_path,  # Folder for checkpoints
           start_epoch,
           end_epoch,
           save_interval):
+
+    # Create directories for saving files
+    create_directories(save_path, checkpoint_path)
 
     train_metrics = {
         'learning_rate': [],
@@ -95,15 +110,14 @@ def train(model,
             total_loss.backward()
 
             optimizer.step()
+
         # Calculate number of correct predictions
-        #_, predicted = torch.max(raw_logits, 1)
-        #correct_predictions += (predicted == labels).sum().item()
         pred = raw_logits.max(1, keepdim=True)[1]
         raw_correct += pred.eq(labels.view_as(pred)).sum().item()
         total_samples += labels.size(0)
 
         # Calculate and store training accuracy
-        raw_accuracy =  raw_correct / total_samples
+        raw_accuracy = raw_correct / total_samples
         train_metrics['raw_accuracy'].append(raw_accuracy)
         
         scheduler.step()
@@ -126,30 +140,27 @@ def train(model,
             # Plot training metrics
             plot_metrics(train_metrics, save_path, epoch, 'Train')
 
-        if epoch % 1 == 0:
-            # Eval test set
-            raw_loss_avg, windowscls_loss_avg, total_loss_avg, raw_accuracy, local_accuracy, \
-            local_loss_avg = eval(model, testloader, criterion, 'test', save_path, epoch)
-    
-            print(f'Test set: raw accuracy: {100. * raw_accuracy:.2f}%, local accuracy: {100. * local_accuracy:.2f}%')
-    
-            # Store metrics
-            test_metrics['raw_accuracy'].append(raw_accuracy)
-            test_metrics['local_accuracy'].append(local_accuracy)
-            test_metrics['raw_loss_avg'].append(raw_loss_avg)
-            test_metrics['local_loss_avg'].append(local_loss_avg)
-            test_metrics['windowscls_loss_avg'].append(windowscls_loss_avg)
-            test_metrics['total_loss_avg'].append(total_loss_avg)
+        # Eval test set
+        raw_loss_avg, windowscls_loss_avg, total_loss_avg, raw_accuracy, local_accuracy, \
+        local_loss_avg = eval(model, testloader, criterion, 'test', save_path, epoch)
 
-            # Plot test metrics
-            plot_metrics(test_metrics, save_path, epoch, 'Test')
+        print(f'Test set: raw accuracy: {100. * raw_accuracy:.2f}%, local accuracy: {100. * local_accuracy:.2f}%')
 
-       
+        # Store metrics
+        test_metrics['raw_accuracy'].append(raw_accuracy)
+        test_metrics['local_accuracy'].append(local_accuracy)
+        test_metrics['raw_loss_avg'].append(raw_loss_avg)
+        test_metrics['local_loss_avg'].append(local_loss_avg)
+        test_metrics['windowscls_loss_avg'].append(windowscls_loss_avg)
+        test_metrics['total_loss_avg'].append(total_loss_avg)
+
+        # Plot test metrics
+        plot_metrics(test_metrics, save_path, epoch, 'Test')
 
         # Save train and test accuracies
         save_accuracies(epoch, raw_accuracy, test_metrics['raw_accuracy'][-1], save_path)
 
-        # Save checkpoint
+        # Save checkpoint in the specified checkpoint path
         if (epoch % save_interval == 0) or (epoch == end_epoch):
             print('Saving checkpoint')
             torch.save({
@@ -157,11 +168,11 @@ def train(model,
                 'model_state_dict': model.state_dict(),
                 'learning_rate': lr,
                 'train_accuracy': train_metrics['raw_accuracy'][-1],
-            }, os.path.join(save_path, 'epoch' + str(epoch) + '.pth'))
+            }, os.path.join(checkpoint_path, 'epoch' + str(epoch) + '.pth'))
 
         # Limit the number of checkpoints to max_checkpoint_num
-        checkpoint_list = [os.path.basename(path) for path in glob.glob(os.path.join(save_path, '*.pth'))]
+        checkpoint_list = [os.path.basename(path) for path in glob.glob(os.path.join(checkpoint_path, '*.pth'))]
         if len(checkpoint_list) == max_checkpoint_num + 1:
             idx_list = [int(name.replace('epoch', '').replace('.pth', '')) for name in checkpoint_list]
             min_idx = min(idx_list)
-            os.remove(os.path.join(save_path, 'epoch' + str(min_idx) + '.pth'))
+            os.remove(os.path.join(checkpoint_path, 'epoch' + str(min_idx) + '.pth'))
