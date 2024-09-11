@@ -111,6 +111,7 @@ def train(model,
     if load_checkpoint_path:
         start_epoch, lr, train_acc = load_checkpoint(load_checkpoint_path, model)
         print(f"Resuming training from epoch {start_epoch + 1}")
+        print(f"Checkpoint loaded from epoch {epoch}, with learning rate {learning_rate:.6f} and train accuracy {train_accuracy:.4f}")
     else:
         print(f"Starting training from scratch at epoch {start_epoch + 1}")
         
