@@ -25,6 +25,8 @@ input_size = 448
 # The pth path of pretrained model
 pretrain_path = './models/pretrained/resnet50-19c8e357.pth'
 
+load_checkpoint_path = './models/loading_checkpoint/model_checkpoint.pth'
+
 
 if set == 'CUB':
     model_path = './checkpoint/cub'  # pth save path
