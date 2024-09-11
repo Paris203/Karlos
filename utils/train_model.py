@@ -82,7 +82,6 @@ def train(model,
           start_epoch,
           end_epoch,
           save_interval,
-         checkpoint_path, 
          load_checkpoint_path):
 
     # Create directories for saving files
