@@ -22,7 +22,7 @@ def load_checkpoint(checkpoint_path, model):
         #print("Checkpoint keys:", checkpoint.keys())
 
         # Print keys in the model's state dictionary
-        print("Model state dict keys:", checkpoint['model_state_dict'].keys())
+        #print("Model state dict keys:", checkpoint['model_state_dict'].keys())
 
         # Load model state dictionary
         model.load_state_dict(checkpoint['model_state_dict'])
