@@ -6,6 +6,25 @@ __all__ = ['ResNet', 'resnet18', 'resnet34', 'resnet50', 'resnet101',
            'resnet152', 'resnext50_32x4d', 'resnext101_32x8d',
            'wide_resnet50_2', 'wide_resnet101_2']
 
+import torch
+import matplotlib.pyplot as plt
+from torchvision.utils import make_grid
+
+# def show_batch(image):
+#     # Select the first 3 channels and treat them as RGB
+# for i in range(6):
+#     image = image[0][:3, :, :]  # Take the first 3 channels
+
+#     # Permute to make it compatible with imshow (Height, Width, Channels)
+#     image = image.permute(1, 2, 0)
+
+#     fig, ax = plt.subplots(figsize=(10, 10))
+#     ax.imshow(image.cpu().numpy())  # Show it as an RGB image
+#     plt.show()
+
+
+
+
 
 model_urls = {
     'resnet18': 'https://download.pytorch.org/models/resnet18-5c106cde.pth',
@@ -213,6 +232,7 @@ class ResNet(nn.Module):
         fm = x
         #print("fm", fm.shape)
         x = self.avgpool(x)
+        #print("avgpool", x.shape)
         x = x.view(x.size(0), -1)
         x = self.dropout(x)
         embeeding = x
@@ -222,17 +242,19 @@ class ResNet(nn.Module):
         return fm, embeeding, conv5_b
 
 
-# def _resnet(arch, block, layers, pretrained, pth_path, **kwargs):
-#     model = ResNet(block, layers, **kwargs)
-#     if pretrained:
-#         state_dict = torch.load(pth_path)
-#         model.load_state_dict(state_dict)
-#     return model
-
-def _resnet(arch, block,layers,  **kwargs):
+def _resnet(arch, block, layers, pretrained, pth_path, **kwargs):
     model = ResNet(block, layers, **kwargs)
-
+    if pretrained:
+        state_dict = torch.load(pth_path)
+        #print(state_dict.keys())
+        model.load_state_dict(state_dict)
+    
     return model
+# change by Diallo
+# def _resnet(arch, block,layers,  **kwargs):
+#     model = ResNet(block, layers, **kwargs)
+
+#     return model
 
 
 def resnet18( **kwargs):

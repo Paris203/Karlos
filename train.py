@@ -35,7 +35,7 @@ def main():
     criterion = nn.CrossEntropyLoss()
 
     parameters = model.parameters()
-
+    checkpoint_path ='result of the model'
     #加载checkpoint
     save_path = os.path.join(model_path, model_name)
     if os.path.exists(save_path):
@@ -65,6 +65,7 @@ def main():
           optimizer=optimizer,
           scheduler=scheduler,
           save_path=save_path,
+          checkpoint_path= checkpoint_path,
           start_epoch=start_epoch,
           end_epoch=end_epoch,
           save_interval=save_interval)

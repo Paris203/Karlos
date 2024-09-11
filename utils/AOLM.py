@@ -3,19 +3,28 @@ from skimage import measure
 
 
 def AOLM(fms, fm1):
+    #print(f"fms shape: {fms.shape}, fm1 shape :{fm1.shape}")
     A = torch.sum(fms, dim=1, keepdim=True)
+    #print("A shape", A.shape)
     a = torch.mean(A, dim=[2, 3], keepdim=True)
+    #print("a shape",a.shape)
     M = (A > a).float()
+    #print("M shape", M.shape)
 
     A1 = torch.sum(fm1, dim=1, keepdim=True)
+    #print("A1 shape", A1.shape)
     a1 = torch.mean(A1, dim=[2, 3], keepdim=True)
+    #print("a1 shape", a1.shape)
     M1 = (A1 > a1).float()
+    #print("M1 shape",M1.shape)
 
 
     coordinates = []
     for i, m in enumerate(M):
+        #print(f"m shape inside the loop :{m.shape}")
         mask_np = m.cpu().numpy().reshape(14, 14)
         component_labels = measure.label(mask_np)
+        #print(f"component_labels shape {component_labels.shape}")
 
         properties = measure.regionprops(component_labels)
         areas = []
