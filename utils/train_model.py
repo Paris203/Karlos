@@ -168,11 +168,11 @@ def train(model,
                 'model_state_dict': model.state_dict(),
                 'learning_rate': lr,
                 'train_accuracy': train_metrics['raw_accuracy'][-1],
-            }, os.path.join(checkpoint_path, 'epoch' + str(epoch) + '.pth'))
+            }, os.path.join(checkpoint_path, 'model_checkpoint' + '.pth'))
 
-        # Limit the number of checkpoints to max_checkpoint_num
-        checkpoint_list = [os.path.basename(path) for path in glob.glob(os.path.join(checkpoint_path, '*.pth'))]
-        if len(checkpoint_list) == max_checkpoint_num + 1:
-            idx_list = [int(name.replace('epoch', '').replace('.pth', '')) for name in checkpoint_list]
-            min_idx = min(idx_list)
-            os.remove(os.path.join(checkpoint_path, 'epoch' + str(min_idx) + '.pth'))
+        # # Limit the number of checkpoints to max_checkpoint_num
+        # checkpoint_list = [os.path.basename(path) for path in glob.glob(os.path.join(checkpoint_path, '*.pth'))]
+        # if len(checkpoint_list) == max_checkpoint_num + 1:
+        #     idx_list = [int(name.replace('epoch', '').replace('.pth', '')) for name in checkpoint_list]
+        #     min_idx = min(idx_list)
+        #     os.remove(os.path.join(checkpoint_path, 'epoch' + str(min_idx) + '.pth'))
