@@ -10,24 +10,20 @@ from utils.eval_model import eval
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
-def load_checkpoint(checkpoint_path, model, optimizer=None):
+def load_checkpoint(checkpoint_path, model):
     """
-    Loads the model parameters from a checkpoint file.
+    Loads the model parameters from a checkpoint file and prints the keys in the checkpoint.
     """
     if os.path.isfile(checkpoint_path):
         print(f"Loading checkpoint '{checkpoint_path}'")
-        checkpoint = torch.load(checkpoint_path)
+        checkpoint = torch.load(checkpoint_path, weights_only=True)
+
 
         # Load model state dictionary
         model.load_state_dict(checkpoint['model_state_dict'])
         print("Model loaded successfully.")
         
-        # If an optimizer was provided, load the optimizer state
-        if optimizer:
-            optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-            print("Optimizer state loaded successfully.")
         
-
         epoch = checkpoint['epoch']
         learning_rate = checkpoint['learning_rate']
         train_accuracy = checkpoint.get('train_accuracy', None)
@@ -37,6 +33,7 @@ def load_checkpoint(checkpoint_path, model, optimizer=None):
         return epoch, learning_rate, train_accuracy
     else:
         raise FileNotFoundError(f"No checkpoint found at '{checkpoint_path}'")
+
 
 
 def create_directories(save_path, checkpoint_path):
@@ -52,13 +49,17 @@ def create_directories(save_path, checkpoint_path):
 def plot_metrics(metrics, save_path, epoch, phase):
     """Plots the training/testing metrics."""
     for metric_name, values in metrics.items():
+        # Ensure the length of x (epochs) matches the length of y (metric values)
+        epochs = range(1, len(values) + 1)
+
         plt.figure()
-        plt.plot(range(1, epoch + 1), values)
+        plt.plot(epochs, values)  # Use 'epochs' instead of 'range(1, epoch + 1)'
         plt.title(f'{phase} {metric_name} over epochs')
         plt.xlabel('Epoch')
         plt.ylabel(metric_name)
         plt.savefig(os.path.join(save_path, f'{phase}_{metric_name}_epoch_{epoch}.png'))
         plt.close()
+
 
 def save_accuracies(epoch, train_accuracy, test_accuracy, save_path):
     """Saves train and test accuracies to a CSV file."""
@@ -82,7 +83,6 @@ def train(model,
           start_epoch,
           end_epoch,
           save_interval,
-         checkpoint_path, 
          load_checkpoint_path):
 
     # Create directories for saving files
@@ -108,8 +108,9 @@ def train(model,
     }
     # Load checkpoint if provided
     if load_checkpoint_path:
-        start_epoch, lr, train_acc = load_checkpoint(load_checkpoint_path, model, optimizer)
+        start_epoch, lr, train_acc = load_checkpoint(load_checkpoint_path, model)
         print(f"Resuming training from epoch {start_epoch + 1}")
+        print(f"Checkpoint loaded from epoch {start_epoch}, with learning rate {lr:.6f} and train accuracy { train_acc :.4f}")
     else:
         print(f"Starting training from scratch at epoch {start_epoch + 1}")
         

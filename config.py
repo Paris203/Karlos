@@ -13,7 +13,7 @@ vis_num = batch_size  # The number of visualized images in tensorboard
 eval_trainset = False  # Whether or not evaluate trainset
 save_interval = 1
 max_checkpoint_num = 200
-end_epoch = 2
+end_epoch = 5
 init_lr = 0.001
 lr_milestones = [60, 100]
 lr_decay_rate = 0.1
@@ -24,6 +24,8 @@ input_size = 448
 
 # The pth path of pretrained model
 pretrain_path = './models/pretrained/resnet50-19c8e357.pth'
+
+load_checkpoint_path = './models/loading_checkpoint/model_checkpoint.pth'
 
 
 if set == 'CUB':
