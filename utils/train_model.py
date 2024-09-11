@@ -12,17 +12,23 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def load_checkpoint(checkpoint_path, model):
     """
-    Loads the model parameters from a checkpoint file.
+    Loads the model parameters from a checkpoint file and prints the keys in the checkpoint.
     """
     if os.path.isfile(checkpoint_path):
         print(f"Loading checkpoint '{checkpoint_path}'")
         checkpoint = torch.load(checkpoint_path)
 
+        # Print all keys in the checkpoint
+        print("Checkpoint keys:", checkpoint.keys())
+
+        # Print keys in the model's state dictionary
+        print("Model state dict keys:", checkpoint['model_state_dict'].keys())
+
         # Load model state dictionary
         model.load_state_dict(checkpoint['model_state_dict'])
         print("Model loaded successfully.")
-    
-
+        
+        
         epoch = checkpoint['epoch']
         learning_rate = checkpoint['learning_rate']
         train_accuracy = checkpoint.get('train_accuracy', None)
@@ -32,6 +38,7 @@ def load_checkpoint(checkpoint_path, model):
         return epoch, learning_rate, train_accuracy
     else:
         raise FileNotFoundError(f"No checkpoint found at '{checkpoint_path}'")
+
 
 
 def create_directories(save_path, checkpoint_path):
