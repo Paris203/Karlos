@@ -155,10 +155,10 @@ def train(model,
         test_metrics['total_loss_avg'].append(total_loss_avg)
 
         # Plot test metrics
-        plot_metrics(test_metrics, save_path, epoch, 'Test')
+        plot_metrics(test_metrics, checkpoint_path, epoch, 'Test')
 
         # Save train and test accuracies
-        save_accuracies(epoch, raw_accuracy, test_metrics['raw_accuracy'][-1], save_path)
+        save_accuracies(epoch, raw_accuracy, test_metrics['raw_accuracy'][-1], checkpoint_path)
 
         # Save checkpoint in the specified checkpoint path
         if (epoch % save_interval == 0) or (epoch == end_epoch):
