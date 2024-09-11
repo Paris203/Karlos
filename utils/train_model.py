@@ -16,13 +16,8 @@ def load_checkpoint(checkpoint_path, model):
     """
     if os.path.isfile(checkpoint_path):
         print(f"Loading checkpoint '{checkpoint_path}'")
-        checkpoint = torch.load(checkpoint_path)
+        checkpoint = torch.load(checkpoint_path, weights_only=True)
 
-        # Print all keys in the checkpoint
-        #print("Checkpoint keys:", checkpoint.keys())
-
-        # Print keys in the model's state dictionary
-        #print("Model state dict keys:", checkpoint['model_state_dict'].keys())
 
         # Load model state dictionary
         model.load_state_dict(checkpoint['model_state_dict'])
