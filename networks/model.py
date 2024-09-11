@@ -86,15 +86,15 @@ class MainNet(nn.Module):
         super(MainNet, self).__init__()
         self.num_classes = num_classes
         self.proposalN = proposalN
-        #self.pretrained_model = resnet.resnet18(pretrained=False, pth_path=pretrain_path)
-        self.pretrained_model = resnet.resnet18()
+        self.pretrained_model = resnet.resnet50(pretrained=False, pth_path=pretrain_path)
+        #self.pretrained_model = resnet.resnet18()
         self.rawcls_net = nn.Linear(channels, num_classes)
         self.APPM = APPM()
 
     def forward(self, x, epoch, batch_idx, status='test', DEVICE= device):
         fm, embedding, conv5_b = self.pretrained_model(x)
         batch_size, channel_size, side_size, _ = fm.shape
-        assert channel_size == 512 # change by Diallo
+        assert channel_size == 2048 # change by Diallo
 
         # raw branch
         raw_logits = self.rawcls_net(embedding)
