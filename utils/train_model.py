@@ -19,7 +19,7 @@ def load_checkpoint(checkpoint_path, model):
         checkpoint = torch.load(checkpoint_path)
 
         # Print all keys in the checkpoint
-        print("Checkpoint keys:", checkpoint.keys())
+        #print("Checkpoint keys:", checkpoint.keys())
 
         # Print keys in the model's state dictionary
         print("Model state dict keys:", checkpoint['model_state_dict'].keys())
@@ -111,7 +111,7 @@ def train(model,
     if load_checkpoint_path:
         start_epoch, lr, train_acc = load_checkpoint(load_checkpoint_path, model)
         print(f"Resuming training from epoch {start_epoch + 1}")
-        print(f"Checkpoint loaded from epoch {epoch}, with learning rate {learning_rate:.6f} and train accuracy {train_accuracy:.4f}")
+        print(f"Checkpoint loaded from epoch {start_epoch}, with learning rate {lr:.6f} and train accuracy { train_acc :.4f}")
     else:
         print(f"Starting training from scratch at epoch {start_epoch + 1}")
         
