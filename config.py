@@ -5,7 +5,7 @@ import numpy as np
 CUDA_VISIBLE_DEVICES = '0'  # The current version only supports one GPU training
 
 
-set = 'Tomato'  # Different dataset with different
+set = 'CUB'  # Different dataset with different
 model_name = ''
 
 batch_size = 6
