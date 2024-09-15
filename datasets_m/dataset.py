@@ -5,6 +5,47 @@ from PIL import Image
 from torchvision import transforms
 import torch
 
+import os
+
+class TomatoLeafDisease():
+    def __init__(self, input_size, root, is_train=True):
+        self.input_size = input_size
+        self.root = root
+        self.is_train = is_train
+        
+        # Set train/validation folder paths
+        if is_train:
+            self.data_folder = os.path.join(self.root, 'train')
+        else:
+            self.data_folder = os.path.join(self.root, 'valid')
+        
+        print(f"Loading data from: {self.data_folder}")  # Debug print to check paths
+        
+        self.class_names = os.listdir(self.data_folder)
+        self.images = []
+        self.labels = []
+        
+        # Loop through each class folder
+        for class_idx, class_name in enumerate(self.class_names):
+            disease_folder = os.path.join(self.data_folder, class_name)
+            print(f"Loading images from: {disease_folder}")  # Debug print to check each folder
+            
+            if not os.path.exists(disease_folder):
+                raise FileNotFoundError(f"Cannot find folder: {disease_folder}")
+
+            for img_file in os.listdir(disease_folder):
+                img_path = os.path.join(disease_folder, img_file)
+                self.images.append(img_path)
+                self.labels.append(class_idx)
+    
+    def __getitem__(self, index):
+        # Your code for loading images and applying transformations here
+        pass
+    
+    def __len__(self):
+        return len(self.images)
+
+
 class CUB():
     def __init__(self, input_size, root, is_train=True, data_len=None):
         self.input_size = input_size
