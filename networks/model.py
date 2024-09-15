@@ -12,7 +12,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 import os
 import matplotlib.pyplot as plt
 
-def plot_and_save_image(image_tensor, save_path="saved_image.png"):
+def plot_and_save_image(image_tensor[0], save_path="saved_image.png"):
     print(f"image_tensor shape: {image_tensor.shape}")
     
     # Extract the directory from the save_path
