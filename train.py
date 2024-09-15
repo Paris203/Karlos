@@ -27,6 +27,7 @@ def main():
 
     #加载数据
     trainloader, testloader = read_dataset(input_size, batch_size, root, set)
+    print(f"len of training dataset {len(trainloader)}, test dataset: {len(testloader)}")
 
     #定义模型
     model = MainNet(proposalN=proposalN, num_classes=num_classes, channels=channels)
