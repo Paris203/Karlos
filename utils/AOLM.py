@@ -20,6 +20,7 @@ def AOLM(fms, fm1):
 
 
     coordinates = []
+    lam_1, lam_2 = [], []
     for i, m in enumerate(M):
         #print(f"m shape inside the loop :{m.shape}")
         mask_np = m.cpu().numpy().reshape(14, 14)
@@ -31,8 +32,6 @@ def AOLM(fms, fm1):
         for prop in properties:
             areas.append(prop.area)
         max_idx = areas.index(max(areas))
-
-
         intersection = ((component_labels==(max_idx+1)).astype(int) + (M1[i][0].cpu().numpy()==1).astype(int)) ==2
         prop = measure.regionprops(intersection.astype(int))
         if len(prop) == 0:
@@ -40,8 +39,6 @@ def AOLM(fms, fm1):
             print('there is one img no intersection')
         else:
             bbox = prop[0].bbox
-
-
         x_lefttop = bbox[0] * 32 - 1
         y_lefttop = bbox[1] * 32 - 1
         x_rightlow = bbox[2] * 32 - 1
@@ -55,6 +52,7 @@ def AOLM(fms, fm1):
         if y_lefttop < 0:
             y_lefttop = 0
         coordinate = [x_lefttop, y_lefttop, x_rightlow, y_rightlow]
+        
         coordinates.append(coordinate)
     return coordinates
 
