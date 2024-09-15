@@ -14,10 +14,10 @@ class TomatoLeafDisease():
 
         # Define the list of class labels
         self.class_labels = [
-            'Bacterial_spot', 'Early_blight', 'Late_blight', 'Leaf_Mold',
-            'Septoria_leaf_spot', 'Two-spotted_spider_mite',
-            'Target_Spot', 'Tomato_Yellow_Leaf_Curl_Virus', 'Tomato_mosaic_virus',
-            'healthy',
+            'Bacterial_spot227', 'Early_blight227', 'Late_blight227', 'Leaf_Mold227',
+            'Septoria_leaf_spot227', 'Two-spotted_spider_mite227',
+            'Target_Spot227', 'Tomato_Yellow_Leaf_Curl_Virus227', 'Tomato_mosaic_virus227',
+            'healthy227',
         ]
         
         # Build list of all image paths and corresponding labels
