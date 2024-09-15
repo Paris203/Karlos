@@ -9,8 +9,20 @@ import matplotlib.pyplot as plt
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+import os
+import matplotlib.pyplot as plt
+
 def plot_and_save_image(image_tensor, save_path="saved_image.png"):
-    print(f" image_tensor shape: {image_tensor.shape}")
+    print(f"image_tensor shape: {image_tensor.shape}")
+    
+    # Extract the directory from the save_path
+    directory = os.path.dirname(save_path)
+    
+    # If the directory does not exist, create it
+    if directory and not os.path.exists(directory):
+        os.makedirs(directory)
+        print(f"Created directory: {directory}")
+    
     # Ensure the tensor is on the CPU and normalized (if necessary)
     image = image_tensor.cpu() if image_tensor.is_cuda else image_tensor
     
@@ -38,6 +50,7 @@ def plot_and_save_image(image_tensor, save_path="saved_image.png"):
 
     # Close the figure to prevent memory issues
     plt.close(fig)
+
 
 
 
@@ -140,6 +153,7 @@ class MainNet(nn.Module):
             local_imgs[i:i + 1] = F.interpolate(x[i:i + 1, :, x0:(x1+1), y0:(y1+1)], size=(448, 448),
                                                 mode='bilinear', align_corners=True)  # [N, 3, 224, 224]
         local_fm, local_embeddings, _ = self.pretrained_model(local_imgs.detach())  # [N, 2048]
+        plot_and_save_image(local_fm.detach())
         local_logits = self.rawcls_net(local_embeddings)  # [N, 200]
 
         proposalN_indices, proposalN_windows_scores, window_scores \
