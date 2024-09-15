@@ -73,6 +73,7 @@ class TomatoLeafDisease():
         self.input_size = input_size
         self.root = root
         self.is_train = is_train
+        print("root path:",self.root)
         
         # Set train/validation folder paths
         if is_train:
