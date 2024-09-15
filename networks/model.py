@@ -139,6 +139,7 @@ class MainNet(nn.Module):
 
     def forward(self, x, epoch, batch_idx, status='test', DEVICE= device):
         fm, embedding, conv5_b = self.pretrained_model(x)
+        print(f" the value of cam :{fm}")
         batch_size, channel_size, side_size, _ = fm.shape
         assert channel_size == 2048 # change by Diallo
 
@@ -154,7 +155,7 @@ class MainNet(nn.Module):
             local_imgs[i:i + 1] = F.interpolate(x[i:i + 1, :, x0:(x1+1), y0:(y1+1)], size=(448, 448),
                                                 mode='bilinear', align_corners=True)  # [N, 3, 224, 224]
         local_fm, local_embeddings, _ = self.pretrained_model(local_imgs.detach())  # [N, 2048]
-        plot_and_save_image(local_fm.detach())
+        #plot_and_save_image(local_fm.detach())
         local_logits = self.rawcls_net(local_embeddings)  # [N, 200]
 
         proposalN_indices, proposalN_windows_scores, window_scores \
