@@ -6,66 +6,130 @@ from torchvision import transforms
 import torch
 
 
-class TomatoLeafDisease():
-    def __init__(self, input_size, root, is_train=True, data_len=None):
-        self.input_size = input_size
-        self.root = os.path.join(root, 'train' if is_train else 'valid')
-        self.is_train = is_train
+# class TomatoLeafDisease():
+#     def __init__(self, input_size, root, is_train=True, data_len=None):
+#         self.input_size = input_size
+#         self.root = os.path.join(root, 'train' if is_train else 'valid')
+#         self.is_train = is_train
 
-        # Define the list of class labels
-        self.class_labels = [
-            'Bacterial_spot227', 'Early_blight227', 'Late_blight227', 'Leaf_Mold227',
-            'Septoria_leaf_spot227', 'Two-spotted_spider_mite227',
-            'Target_Spot227', 'Tomato_Yellow_Leaf_Curl_Virus227', 'Tomato_mosaic_virus227',
-            'healthy227',
-        ]
+#         # Define the list of class labels
+#         self.class_labels = [
+#             'Bacterial_spot227', 'Early_blight227', 'Late_blight227', 'Leaf_Mold227',
+#             'Septoria_leaf_spot227', 'Two-spotted_spider_mite227',
+#             'Target_Spot227', 'Tomato_Yellow_Leaf_Curl_Virus227', 'Tomato_mosaic_virus227',
+#             'healthy227',
+#         ]
         
-        # Build list of all image paths and corresponding labels
-        self.img_list = []
-        self.label_list = []
+#         # Build list of all image paths and corresponding labels
+#         self.img_list = []
+#         self.label_list = []
         
-        for idx, disease in enumerate(self.class_labels):
-            disease_folder = os.path.join(self.root, disease)
+#         for idx, disease in enumerate(self.class_labels):
+#             disease_folder = os.path.join(self.root, disease)
+#             for img_file in os.listdir(disease_folder):
+#                 if img_file.endswith('.jpg') or img_file.endswith('.png'):
+#                     self.img_list.append(os.path.join(disease_folder, img_file))
+#                     self.label_list.append(idx)
+        
+#         # Limit the dataset size if data_len is specified
+#         if data_len is not None:
+#             self.img_list = self.img_list[:data_len]
+#             self.label_list = self.label_list[:data_len]
+        
+#         # Define image transformations
+#         if self.is_train:
+#             self.transform = transforms.Compose([
+#                 transforms.Resize((self.input_size, self.input_size)),
+#                 transforms.RandomHorizontalFlip(),
+#                 transforms.ColorJitter(brightness=0.2, contrast=0.2),
+#                 transforms.ToTensor(),
+#                 transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+#             ])
+#         else:
+#             self.transform = transforms.Compose([
+#                 transforms.Resize((self.input_size, self.input_size)),
+#                 transforms.ToTensor(),
+#                 transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+#             ])
+    
+#     def __getitem__(self, index):
+#         img_path = self.img_list[index]
+#         label = self.label_list[index]
+        
+#         # Load image
+#         img = Image.open(img_path).convert('RGB')
+        
+#         # Apply transformations
+#         img = self.transform(img)
+        
+#         return img, label
+
+#     def __len__(self):
+#         return len(self.img_list)
+
+
+class TomatoLeafDisease():
+    def __init__(self, input_size, root, is_train=True):
+        self.input_size = input_size
+        self.root = root
+        self.is_train = is_train
+        
+        # Set train/validation folder paths
+        if is_train:
+            self.data_folder = os.path.join(self.root, 'train')
+        else:
+            self.data_folder = os.path.join(self.root, 'valid')
+        
+        print(f"Loading data from: {self.data_folder}")  # Debug print to check paths
+        
+        self.class_names = os.listdir(self.data_folder)
+        self.images = []
+        self.labels = []
+        
+        # Loop through each class folder
+        for class_idx, class_name in enumerate(self.class_names):
+            disease_folder = os.path.join(self.data_folder, class_name)
+            print(f"Trying to load images from: {disease_folder}")  # Debug print to check each folder
+            
+            if not os.path.exists(disease_folder):
+                raise FileNotFoundError(f"Cannot find folder: {disease_folder}")
+
             for img_file in os.listdir(disease_folder):
-                if img_file.endswith('.jpg') or img_file.endswith('.png'):
-                    self.img_list.append(os.path.join(disease_folder, img_file))
-                    self.label_list.append(idx)
-        
-        # Limit the dataset size if data_len is specified
-        if data_len is not None:
-            self.img_list = self.img_list[:data_len]
-            self.label_list = self.label_list[:data_len]
-        
-        # Define image transformations
-        if self.is_train:
+                img_path = os.path.join(disease_folder, img_file)
+                self.images.append(img_path)
+                self.labels.append(class_idx)
+
+        # Define transforms for train and validation sets
+        if is_train:
             self.transform = transforms.Compose([
-                transforms.Resize((self.input_size, self.input_size)),
-                transforms.RandomHorizontalFlip(),
-                transforms.ColorJitter(brightness=0.2, contrast=0.2),
-                transforms.ToTensor(),
-                transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+                transforms.Resize((self.input_size, self.input_size)),  # Resize images
+                transforms.RandomHorizontalFlip(),  # Randomly flip images for augmentation
+                transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1),  # Augment color
+                transforms.ToTensor(),  # Convert image to PyTorch tensor
+                transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Normalize with ImageNet stats
             ])
         else:
             self.transform = transforms.Compose([
-                transforms.Resize((self.input_size, self.input_size)),
-                transforms.ToTensor(),
-                transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+                transforms.Resize((self.input_size, self.input_size)),  # Resize images
+                transforms.ToTensor(),  # Convert image to PyTorch tensor
+                transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Normalize with ImageNet stats
             ])
-    
-    def __getitem__(self, index):
-        img_path = self.img_list[index]
-        label = self.label_list[index]
-        
-        # Load image
-        img = Image.open(img_path).convert('RGB')
-        
-        # Apply transformations
-        img = self.transform(img)
-        
-        return img, label
 
+    def __getitem__(self, index):
+        # Load image and apply transforms
+        img_path = self.images[index]
+        label = self.labels[index]
+
+        img = Image.open(img_path).convert("RGB")  # Ensure all images are RGB
+        img = self.transform(img)  # Apply the selected transforms
+
+        return img, label
+    
     def __len__(self):
-        return len(self.img_list)
+        return len(self.images)
+
+
+
 
 
 
