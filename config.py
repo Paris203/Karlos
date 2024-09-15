@@ -40,6 +40,18 @@ if set == 'CUB':
     ratios = [[4, 4], [3, 5], [5, 3],
               [6, 6], [5, 7], [7, 5],
               [8, 8], [6, 10], [10, 6], [7, 9], [9, 7], [7, 10], [10, 7]]
+elif set == 'Tomato':
+    model_path = './checkpoint/cub'  # pth save path
+    root = './datasets_m/Tomato'  # dataset path
+    num_classes = 10
+    # windows info for CUB
+    N_list = [2, 3, 2]
+    proposalN = sum(N_list)  # proposal window num
+    window_side = [128, 192, 256]
+    iou_threshs = [0.25, 0.25, 0.25]
+    ratios = [[4, 4], [3, 5], [5, 3],
+              [6, 6], [5, 7], [7, 5],
+              [8, 8], [6, 10], [10, 6], [7, 9], [9, 7], [7, 10], [10, 7]]
 else:
     # windows info for CAR and Aircraft
     N_list = [3, 2, 1]
