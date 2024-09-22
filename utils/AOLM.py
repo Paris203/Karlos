@@ -70,6 +70,7 @@ def plot_and_save_image(image_tensor, save_path="saved_image.png"):
 
 def AOLM(fms, fm1):
     #print(f"fms shape: {fms.shape}, fm1 shape :{fm1.shape}")
+    plot_and_save_image(fms, save_path="saved_image.png")
     A = torch.sum(fms, dim=1, keepdim=True)
     #print("A shape", A.shape)
     a = torch.mean(A, dim=[2, 3], keepdim=True)
@@ -90,7 +91,7 @@ def AOLM(fms, fm1):
     for i, m in enumerate(M):
         #print(f"m shape inside the loop :{m.shape}")
         mask_np = m.cpu().numpy().reshape(14, 14)
-        plot_and_save_image(mask_np, save_path="saved_image.png")
+        #plot_and_save_image(mask_np, save_path="saved_image.png")
         component_labels = measure.label(mask_np)
         #print(f"component_labels shape {component_labels.shape}")
 
