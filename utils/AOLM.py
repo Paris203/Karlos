@@ -1,6 +1,49 @@
 import torch
 from skimage import measure
 
+import os
+import matplotlib.pyplot as plt
+
+def plot_and_save_image(image_tensor, save_path="saved_image.png"):
+    image_tensor = image_tensor[0]
+    print(f"image_tensor shape: {image_tensor.shape}")
+    
+    # Extract the directory from the save_path
+    directory = os.path.dirname(save_path)
+    
+    # If the directory does not exist, create it
+    if directory and not os.path.exists(directory):
+        os.makedirs(directory)
+        print(f"Created directory: {directory}")
+    
+    # Ensure the tensor is on the CPU and normalized (if necessary)
+    image = image_tensor.cpu() if image_tensor.is_cuda else image_tensor
+    
+    # Normalize the image to the range [0, 1] (optional)
+    image = (image - image.min()) / (image.max() - image.min())
+    
+    # Select the first 3 channels if the image has more than 3 (for RGB)
+    if image.shape[0] > 3:
+        image = image[:3, :, :]
+    
+    # Permute the dimensions to (Height, Width, Channels)
+    image = image.permute(1, 2, 0)
+    
+    # Plot the image using matplotlib
+    fig, ax = plt.subplots(figsize=(5, 5))  # Create the figure and axis
+    ax.imshow(image.numpy())  # Convert tensor to NumPy and display the image
+    plt.axis('off')  # Turn off axis for cleaner image display
+
+    # Save the image to the specified path
+    plt.savefig(save_path, bbox_inches='tight')  # Save with tight bounding box
+    print(f"Image saved at {save_path}")
+    
+    # Optionally show the image as well
+    plt.show()
+
+    # Close the figure to prevent memory issues
+    plt.close(fig)
+
 
 def AOLM(fms, fm1):
     #print(f"fms shape: {fms.shape}, fm1 shape :{fm1.shape}")
@@ -24,6 +67,7 @@ def AOLM(fms, fm1):
     for i, m in enumerate(M):
         #print(f"m shape inside the loop :{m.shape}")
         mask_np = m.cpu().numpy().reshape(14, 14)
+        plot_and_save_image(mask_np, save_path="saved_image.png")
         component_labels = measure.label(mask_np)
         #print(f"component_labels shape {component_labels.shape}")
 
