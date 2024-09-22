@@ -4,8 +4,11 @@ from skimage import measure
 import os
 import matplotlib.pyplot as plt
 
+import os
+import matplotlib.pyplot as plt
+import torch
+
 def plot_and_save_image(image_tensor, save_path="saved_image.png"):
-    #image_tensor = image_tensor[0]
     print(f"image_tensor shape: {image_tensor.shape}")
     
     # Extract the directory from the save_path
@@ -17,21 +20,30 @@ def plot_and_save_image(image_tensor, save_path="saved_image.png"):
         print(f"Created directory: {directory}")
     
     # Ensure the tensor is on the CPU and normalized (if necessary)
-    image = image_tensor #.cpu() #if image_tensor.is_cuda else image_tensor
+    image = image_tensor  # .cpu() if image_tensor.is_cuda else image_tensor
     
-    # Normalize the image to the range [0, 1] (optional)
+    # Normalize the image to the range [0, 1]
     image = (image - image.min()) / (image.max() - image.min())
     
-    # Select the first 3 channels if the image has more than 3 (for RGB)
-    if image.shape[0] > 3:
-        image = image[:3, :, :]
+    # Check the number of dimensions of the tensor
+    if len(image.shape) == 3:  # Case for a 3D tensor (C, H, W)
+        # Select the first 3 channels if the image has more than 3 (for RGB)
+        if image.shape[0] > 3:
+            image = image[:3, :, :]
+        
+        # Permute the dimensions to (Height, Width, Channels) for plotting
+        image = image.permute(1, 2, 0)
     
-    # Permute the dimensions to (Height, Width, Channels)
-    image = image.permute(1, 2, 0)
+    elif len(image.shape) == 2:  # Case for a 2D tensor (H, W)
+        # No need to permute, just add a channel dimension for grayscale
+        image = image.unsqueeze(-1)
+    
+    else:
+        raise ValueError(f"Unexpected image tensor shape: {image.shape}")
     
     # Plot the image using matplotlib
     fig, ax = plt.subplots(figsize=(5, 5))  # Create the figure and axis
-    ax.imshow(image.numpy())  # Convert tensor to NumPy and display the image
+    ax.imshow(image.numpy(), cmap='gray' if image.shape[-1] == 1 else None)  # Convert tensor to NumPy and display the image
     plt.axis('off')  # Turn off axis for cleaner image display
 
     # Save the image to the specified path
@@ -43,6 +55,7 @@ def plot_and_save_image(image_tensor, save_path="saved_image.png"):
 
     # Close the figure to prevent memory issues
     plt.close(fig)
+
 
 
 def AOLM(fms, fm1):
