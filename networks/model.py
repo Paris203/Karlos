@@ -139,7 +139,7 @@ class MainNet(nn.Module):
 
     def forward(self, x, epoch, batch_idx, status='test', DEVICE= device):
         fm, embedding, conv5_b = self.pretrained_model(x)
-        print(f" the value of cam :{fm}")
+        #print(f" the value of cam :{fm}")
         batch_size, channel_size, side_size, _ = fm.shape
         assert channel_size == 2048 # change by Diallo
 
