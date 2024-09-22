@@ -8,6 +8,11 @@ import os
 import matplotlib.pyplot as plt
 import torch
 
+import os
+import matplotlib.pyplot as plt
+import torch
+import numpy as np
+
 def plot_and_save_image(image_tensor, save_path="saved_image.png"):
     print(f"image_tensor shape: {image_tensor.shape}")
     
@@ -19,31 +24,36 @@ def plot_and_save_image(image_tensor, save_path="saved_image.png"):
         os.makedirs(directory)
         print(f"Created directory: {directory}")
     
-    # Ensure the tensor is on the CPU and normalized (if necessary)
-    image = image_tensor  # .cpu() if image_tensor.is_cuda else image_tensor
+    # Check if the image_tensor is a PyTorch tensor
+    if isinstance(image_tensor, torch.Tensor):
+        # Ensure the tensor is on the CPU and normalized
+        image = image_tensor.cpu().detach().numpy()
+    else:
+        # Assume it's already a NumPy array
+        image = image_tensor
     
     # Normalize the image to the range [0, 1]
     image = (image - image.min()) / (image.max() - image.min())
     
-    # Check the number of dimensions of the tensor
-    if len(image.shape) == 3:  # Case for a 3D tensor (C, H, W)
+    # Check the number of dimensions of the tensor/array
+    if len(image.shape) == 3:  # Case for a 3D array (C, H, W)
         # Select the first 3 channels if the image has more than 3 (for RGB)
         if image.shape[0] > 3:
             image = image[:3, :, :]
         
         # Permute the dimensions to (Height, Width, Channels) for plotting
-        image = image.permute(1, 2, 0)
+        image = np.transpose(image, (1, 2, 0))
     
-    elif len(image.shape) == 2:  # Case for a 2D tensor (H, W)
-        # No need to permute, just add a channel dimension for grayscale
-        image = image.unsqueeze(-1)
+    elif len(image.shape) == 2:  # Case for a 2D array (H, W)
+        # Add a channel dimension for grayscale using expand_dims
+        image = np.expand_dims(image, axis=-1)
     
     else:
         raise ValueError(f"Unexpected image tensor shape: {image.shape}")
     
     # Plot the image using matplotlib
     fig, ax = plt.subplots(figsize=(5, 5))  # Create the figure and axis
-    ax.imshow(image.numpy(), cmap='gray' if image.shape[-1] == 1 else None)  # Convert tensor to NumPy and display the image
+    ax.imshow(image, cmap='gray' if image.shape[-1] == 1 else None)  # Display the image
     plt.axis('off')  # Turn off axis for cleaner image display
 
     # Save the image to the specified path
