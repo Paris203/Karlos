@@ -79,6 +79,7 @@ def AOLM(fms, fm1):
     for i, (m, fms_2) in enumerate(zip(M, fms)):
         #print(f"m shape inside the loop :{m.shape}")
         mask_np = m.cpu().numpy().reshape(14, 14)
+        print(f"shape of the fms_2 :{fms_2.shape})
         fms_2 = fms_2.cpu().numpy().reshape(14, 14)
         plot_and_save_image(fms_2, save_path="saved_image.png")
         component_labels = measure.label(mask_np)
