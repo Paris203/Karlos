@@ -76,9 +76,10 @@ def AOLM(fms, fm1):
 
     coordinates = []
     lam_1, lam_2 = [], []
-    for i, m in enumerate(M):
+    for i, (m, fms_2) in enumerate(zip(M, fms)):
         #print(f"m shape inside the loop :{m.shape}")
         mask_np = m.cpu().numpy().reshape(14, 14)
+        fms_2 = fms_2.cpu().numpy().reshape(14, 14)
         #plot_and_save_image(mask_np, save_path="saved_image.png")
         component_labels = measure.label(mask_np)
         #print(f"component_labels shape {component_labels.shape}")
