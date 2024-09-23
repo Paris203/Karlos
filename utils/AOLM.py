@@ -14,7 +14,7 @@ import torch
 import numpy as np
 
 def plot_and_save_image(image_tensor, save_path="saved_image.png"):
-    #image_tensor = image_tensor[0]
+    image_tensor = image_tensor[0]
     print(f"image_tensor shape: {image_tensor.shape}")
     
     # Extract the directory from the save_path
@@ -27,16 +27,19 @@ def plot_and_save_image(image_tensor, save_path="saved_image.png"):
     
     # Ensure the tensor is on the CPU and normalized (if necessary)
     image = image_tensor.cpu() if image_tensor.is_cuda else image_tensor
+    print(f"image shape {image.shape}")
     
     # Normalize the image to the range [0, 1] (optional)
     image = (image - image.min()) / (image.max() - image.min())
+    print(f"image shape after normalize {image.shape}")
     
     # Select the first 3 channels if the image has more than 3 (for RGB)
-    if image.shape[0] > 3:
-        image = image[:3, :, :]
+    #if image.shape[0] > 3:
+    image = image[:3, :, :]
     
     # Permute the dimensions to (Height, Width, Channels)
     image = image.permute(1, 2, 0)
+    print(f"image shape after permuted : {image.shape}")
     
     # Plot the image using matplotlib
     fig, ax = plt.subplots(figsize=(5, 5))  # Create the figure and axis
