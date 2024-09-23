@@ -14,7 +14,7 @@ import torch
 import numpy as np
 
 def plot_and_save_image(image_tensor, save_path="saved_image.png"):
-    image_tensor = image_tensor[0]
+    #image_tensor = image_tensor[0]
     print(f"image_tensor shape: {image_tensor.shape}")
     
     # Extract the directory from the save_path
