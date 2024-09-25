@@ -1,12 +1,8 @@
-import torch
-from skimage import measure
+# import torch
+# from skimage import measure
 
-import os
-import matplotlib.pyplot as plt
-
-import os
-import matplotlib.pyplot as plt
-import torch
+# import os
+# import matplotlib.pyplot as plt
 
 import os
 import matplotlib.pyplot as plt
@@ -59,63 +55,129 @@ def plot_and_save_image(image_tensor, save_path="saved_image.png"):
 
 
 
+# def AOLM(fms, fm1):
+#     #print(f"fms shape: {fms.shape}, fm1 shape :{fm1.shape}")
+#     plot_and_save_image(fms, save_path="saved_image.png")
+#     A = torch.sum(fms, dim=1, keepdim=True)
+#     #print("A shape", A.shape)
+#     a = torch.mean(A, dim=[2, 3], keepdim=True)
+#     #print("a shape",a.shape)
+#     M = (A > a).float()
+#     #print("M shape", M.shape)
+
+#     A1 = torch.sum(fm1, dim=1, keepdim=True)
+#     #print("A1 shape", A1.shape)
+#     a1 = torch.mean(A1, dim=[2, 3], keepdim=True)
+#     #print("a1 shape", a1.shape)
+#     M1 = (A1 > a1).float()
+#     #print("M1 shape",M1.shape)
+
+
+#     coordinates = []
+#     lam_1, lam_2 = [], []
+#     for i, (m, fms_2) in enumerate(zip(M, fms)):
+#         #print(f"m shape inside the loop :{m.shape}")
+#         mask_np = m.cpu().numpy().reshape(14, 14)
+#         #print(f"shape of the fms_2 :{fms_2.shape}")
+#         #plot_and_save_image(fms_2.detach(), save_path="saved_image.png")
+#         fms_2 = fms_2.cpu().numpy().reshape(14, 14)
+       
+#         component_labels = measure.label(mask_np)
+#         #print(f"component_labels shape {component_labels.shape}")
+
+#         properties = measure.regionprops(component_labels)
+#         areas = []
+#         for prop in properties:
+#             areas.append(prop.area)
+#         max_idx = areas.index(max(areas))
+#         intersection = ((component_labels==(max_idx+1)).astype(int) + (M1[i][0].cpu().numpy()==1).astype(int)) ==2
+#         prop = measure.regionprops(intersection.astype(int))
+#         if len(prop) == 0:
+#             bbox = [0, 0, 14, 14]
+#             print('there is one img no intersection')
+#         else:
+#             bbox = prop[0].bbox
+#         x_lefttop = bbox[0] * 32 - 1
+#         y_lefttop = bbox[1] * 32 - 1
+#         x_rightlow = bbox[2] * 32 - 1
+#         y_rightlow = bbox[3] * 32 - 1
+
+#         #print(f"x_lefttop: {x_lefttop}, y_lefttop: {y_lefttop}, x_rightlow: {x_rightlow}, y_rightlow: {y_rightlow}")
+
+#         # for image
+#         if x_lefttop < 0:
+#             x_lefttop = 0
+#         if y_lefttop < 0:
+#             y_lefttop = 0
+#         coordinate = [x_lefttop, y_lefttop, x_rightlow, y_rightlow]
+#         lam = torch.sum(fms_2/((x_rightlow-x_lefttop)*(y_rightlow-y_lefttop)))
+#         print(f"lam {lam}")
+#         coordinates.append(coordinate)
+#     return coordinates
+
 def AOLM(fms, fm1):
-    #print(f"fms shape: {fms.shape}, fm1 shape :{fm1.shape}")
+    # Plot the feature map for visualization if needed
     plot_and_save_image(fms, save_path="saved_image.png")
+    
     A = torch.sum(fms, dim=1, keepdim=True)
-    #print("A shape", A.shape)
     a = torch.mean(A, dim=[2, 3], keepdim=True)
-    #print("a shape",a.shape)
     M = (A > a).float()
-    #print("M shape", M.shape)
 
     A1 = torch.sum(fm1, dim=1, keepdim=True)
-    #print("A1 shape", A1.shape)
     a1 = torch.mean(A1, dim=[2, 3], keepdim=True)
-    #print("a1 shape", a1.shape)
     M1 = (A1 > a1).float()
-    #print("M1 shape",M1.shape)
-
 
     coordinates = []
-    lam_1, lam_2 = [], []
     for i, (m, fms_2) in enumerate(zip(M, fms)):
-        #print(f"m shape inside the loop :{m.shape}")
+        # Check the shape of fms_2 before reshaping
+        print(f"Original fms_2 shape: {fms_2.shape}")
+        
         mask_np = m.cpu().numpy().reshape(14, 14)
-        #print(f"shape of the fms_2 :{fms_2.shape}")
-        #plot_and_save_image(fms_2.detach(), save_path="saved_image.png")
-        fms_2 = fms_2.cpu().numpy().reshape(14, 14)
-       
+        
+        # Adjust the reshaping based on the actual size of fms_2
+        # Compute the total number of elements to determine appropriate reshaping
+        fms_2_size = fms_2.numel()  # total number of elements in fms_2
+        if fms_2_size == 14 * 14:  # If it can be reshaped to 14x14
+            fms_2 = fms_2.cpu().numpy().reshape(14, 14)
+        else:
+            # Dynamically reshape to the correct size, or skip reshaping
+            print(f"Cannot reshape fms_2 of size {fms_2_size} into (14, 14).")
+            fms_2 = fms_2.cpu().numpy()  # Keep the original shape if incompatible
+            
         component_labels = measure.label(mask_np)
-        #print(f"component_labels shape {component_labels.shape}")
 
         properties = measure.regionprops(component_labels)
-        areas = []
-        for prop in properties:
-            areas.append(prop.area)
+        areas = [prop.area for prop in properties]
+        
+        if len(areas) == 0:
+            print("No regions found in component_labels.")
+            continue  # Skip if no areas found
+        
         max_idx = areas.index(max(areas))
-        intersection = ((component_labels==(max_idx+1)).astype(int) + (M1[i][0].cpu().numpy()==1).astype(int)) ==2
+        intersection = ((component_labels == (max_idx + 1)).astype(int) + (M1[i][0].cpu().numpy() == 1).astype(int)) == 2
         prop = measure.regionprops(intersection.astype(int))
+
         if len(prop) == 0:
             bbox = [0, 0, 14, 14]
-            print('there is one img no intersection')
+            print('No intersection found')
         else:
             bbox = prop[0].bbox
+        
         x_lefttop = bbox[0] * 32 - 1
         y_lefttop = bbox[1] * 32 - 1
         x_rightlow = bbox[2] * 32 - 1
         y_rightlow = bbox[3] * 32 - 1
 
-        #print(f"x_lefttop: {x_lefttop}, y_lefttop: {y_lefttop}, x_rightlow: {x_rightlow}, y_rightlow: {y_rightlow}")
-
-        # for image
+        # Ensure the coordinates are valid
         if x_lefttop < 0:
             x_lefttop = 0
         if y_lefttop < 0:
             y_lefttop = 0
+        
         coordinate = [x_lefttop, y_lefttop, x_rightlow, y_rightlow]
-        lam = torch.sum(fms_2/((x_rightlow-x_lefttop)*(y_rightlow-y_lefttop)))
-        print(f"lam {lam}")
+        lam = torch.sum(fms_2 / ((x_rightlow - x_lefttop) * (y_rightlow - y_lefttop)))
+        print(f"lam: {lam}")
         coordinates.append(coordinate)
+
     return coordinates
 
