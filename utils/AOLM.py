@@ -128,22 +128,19 @@ def AOLM(fms, fm1):
         print(f"Original fms_2 shape: {fms_2.shape}")
         
         mask_np = m.cpu().numpy().reshape(14, 14)
+
+        # Reduce fms_2 over the channel dimension if needed
+        # Taking the mean of the channels to reduce it to (14, 14)
+        fms_2_reduced = torch.mean(fms_2, dim=0)  # Now fms_2_reduced should be (14, 14)
+        print(f"Reduced fms_2 shape: {fms_2_reduced.shape}")
         
-        # Adjust the reshaping based on the actual size of fms_2
-        # Compute the total number of elements to determine appropriate reshaping
-        fms_2_size = fms_2.numel()  # total number of elements in fms_2
-        if fms_2_size == 14 * 14:  # If it can be reshaped to 14x14
-            fms_2 = fms_2.cpu().numpy().reshape(14, 14)
-        else:
-            # Dynamically reshape to the correct size, or skip reshaping
-            print(f"Cannot reshape fms_2 of size {fms_2_size} into (14, 14).")
-            fms_2 = fms_2.cpu().numpy()  # Keep the original shape if incompatible
-            
+        fms_2_np = fms_2_reduced.cpu().numpy()  # Convert to NumPy array for further processing
+
         component_labels = measure.label(mask_np)
 
         properties = measure.regionprops(component_labels)
         areas = [prop.area for prop in properties]
-        
+
         if len(areas) == 0:
             print("No regions found in component_labels.")
             continue  # Skip if no areas found
@@ -170,9 +167,12 @@ def AOLM(fms, fm1):
             y_lefttop = 0
         
         coordinate = [x_lefttop, y_lefttop, x_rightlow, y_rightlow]
-        lam = torch.sum(fms_2 / ((x_rightlow - x_lefttop) * (y_rightlow - y_lefttop)))
+
+        # Correct the `lam` calculation by using the reduced (14, 14) feature map
+        lam = torch.sum(fms_2_reduced / ((x_rightlow - x_lefttop) * (y_rightlow - y_lefttop)))
         print(f"lam: {lam}")
         coordinates.append(coordinate)
 
     return coordinates
+
 
