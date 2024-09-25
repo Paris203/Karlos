@@ -82,9 +82,9 @@ def AOLM(fms, fm1):
     for i, (m, fms_2) in enumerate(zip(M, fms)):
         #print(f"m shape inside the loop :{m.shape}")
         mask_np = m.cpu().numpy().reshape(14, 14)
-        print(f"shape of the fms_2 :{fms_2.shape}")
-        plot_and_save_image(fms_2.detach(), save_path="saved_image.png")
-        #fms_2 = fms_2.cpu().numpy().reshape(14, 14)
+        #print(f"shape of the fms_2 :{fms_2.shape}")
+        #plot_and_save_image(fms_2.detach(), save_path="saved_image.png")
+        fms_2 = fms_2.cpu().numpy().reshape(14, 14)
        
         component_labels = measure.label(mask_np)
         #print(f"component_labels shape {component_labels.shape}")
@@ -114,7 +114,8 @@ def AOLM(fms, fm1):
         if y_lefttop < 0:
             y_lefttop = 0
         coordinate = [x_lefttop, y_lefttop, x_rightlow, y_rightlow]
-        
+        lam = torch.sum(fms_2/((x_rightlow-x_lefttop)*(y_rightlow-y_lefttop)))
+        print(f"lam {lam}")
         coordinates.append(coordinate)
     return coordinates
 
