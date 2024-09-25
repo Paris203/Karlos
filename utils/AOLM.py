@@ -1,9 +1,4 @@
-# import torch
-# from skimage import measure
-
-# import os
-# import matplotlib.pyplot as plt
-
+from skimage import measure
 import os
 import matplotlib.pyplot as plt
 import torch
