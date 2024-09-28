@@ -170,7 +170,7 @@ def AOLM(fms, fm1):
 
         # Correct the `lam` calculation by using the reduced (14, 14) feature map
         lam = torch.sum(fms_2_reduced / ((x_rightlow - x_lefttop) * (y_rightlow - y_lefttop)))
-        print(f"lam: {lam}")
+        print(f"lam: {lam * 100}")
         coordinates.append(coordinate)
 
     return coordinates
