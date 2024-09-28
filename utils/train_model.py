@@ -140,10 +140,10 @@ def train(model,
             window_scores, _, raw_logits, local_logits, fm = model(images, epoch, i, 'train')
 
             # Assuming fm is the feature map and conv5_b is also a feature map output
-            embedding, conv5_b = fm, conv5_b = fm, conv5_b = model.pretrained_model(images)
+            #embedding, conv5_b = fm, conv5_b = fm, conv5_b = model.pretrained_model(images)
 
             # Call AOLM function to get the coordinates and lam
-            coordinates, lam = AOLM(fm.detach(), conv5_b.detach())
+            #coordinates, lam = AOLM(fm.detach(), conv5_b.detach())
 
             raw_loss = criterion(raw_logits, labels)
             local_loss = criterion(local_logits, labels)
@@ -154,7 +154,7 @@ def train(model,
             if epoch < 2:
                 total_loss = raw_loss
             else:
-                total_loss = (raw_loss + local_loss + windowscls_loss) * lam
+                total_loss = (raw_loss + local_loss + windowscls_loss) ## * lam
 
             total_loss.backward()
 
