@@ -147,7 +147,7 @@ class MainNet(nn.Module):
         raw_logits = self.rawcls_net(embedding)
 
         #SCDA
-        coordinates, lam = torch.tensor(AOLM(fm.detach(), conv5_b.detach()))
+        coordinates= torch.tensor(AOLM(fm.detach(), conv5_b.detach()))
 
         local_imgs = torch.zeros([batch_size, 3, 448, 448]).to(DEVICE)  # [N, 3, 448, 448]
         for i in range(batch_size):
