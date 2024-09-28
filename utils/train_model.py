@@ -6,6 +6,7 @@ import csv
 from tqdm import tqdm
 from config import max_checkpoint_num, proposalN, eval_trainset, set
 from utils.eval_model import eval
+from utils.AOLM import AOLM
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -135,7 +136,8 @@ def train(model,
             optimizer.zero_grad()
 
             proposalN_windows_score, proposalN_windows_logits, indices, \
-            window_scores, _, raw_logits, local_logits, _ = model(images, epoch, i, 'train')
+            window_scores, _, raw_logits, local_logits, fms = model(images, epoch, i, 'train')
+            print(f"fms in the training model {fms.shape}")
 
             raw_loss = criterion(raw_logits, labels)
             local_loss = criterion(local_logits, labels)
