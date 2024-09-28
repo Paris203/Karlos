@@ -7,8 +7,11 @@ from tqdm import tqdm
 from config import max_checkpoint_num, proposalN, eval_trainset, set
 from utils.eval_model import eval
 from utils.AOLM import AOLM
+from config import pretrain_path
+from networks import resnet
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+pretrain_model = resnet.resnet50(pretrained=True, pth_path=pretrain_path)
 
 
 def load_checkpoint(checkpoint_path, model):
@@ -137,13 +140,15 @@ def train(model,
 
             # Get the model outputs, including fm and conv5_b
             proposalN_windows_score, proposalN_windows_logits, indices, \
-            window_scores, _, raw_logits, local_logits, fm = model(images, epoch, i, 'train')
+            window_scores, _, raw_logits, local_logits, _ = model(images, epoch, i, 'train')
 
             # Assuming fm is the feature map and conv5_b is also a feature map output
-            #embedding, conv5_b = fm, conv5_b = fm, conv5_b = model.pretrained_model(images)
+            fm, embedding, conv5_b = model.pretrain_model(images)
+            print(f" shape fm in model {fm.shape}, conv5_b shape {conv5_b.shape}")
 
             # Call AOLM function to get the coordinates and lam
-            #coordinates, lam = AOLM(fm.detach(), conv5_b.detach())
+            coordinates, lam = AOLM(fm.detach(), conv5_b.detach())
+            print("lamda value", lam)
 
             raw_loss = criterion(raw_logits, labels)
             local_loss = criterion(local_logits, labels)
