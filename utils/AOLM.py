@@ -129,13 +129,13 @@ def AOLM(fms, fm1):
     lamda = []
     for i, (m, fms_2) in enumerate(zip(M, fms)):
         # Check the shape of fms_2 before reshaping
-        print(f"Original fms_2 shape: {fms_2.shape}")
+        #print(f"Original fms_2 shape: {fms_2.shape}")
         
         mask_np = m.cpu().numpy().reshape(14, 14)
 
         # Reduce fms_2 over the channel dimension to get (14, 14)
         fms_2_reduced = torch.mean(fms_2, dim=0)  # Now fms_2_reduced is (14, 14)
-        print(f"Reduced fms_2 shape: {fms_2_reduced.shape}")
+        #print(f"Reduced fms_2 shape: {fms_2_reduced.shape}")
 
         fms_2_np = fms_2_reduced.cpu().numpy()  # Convert to NumPy array for further processing
 
@@ -185,7 +185,7 @@ def AOLM(fms, fm1):
         lam = 0.8 * lam + 0.1
         lam = max(0.1, min(lam, 0.9))  # Ensure lam is within [0.1, 0.9]
 
-        print(f"lam: {lam}")
+        #print(f"lam: {lam}")
         coordinates.append(coordinate)
         #lamda.append(lam)
 
