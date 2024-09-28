@@ -126,6 +126,7 @@ def AOLM(fms, fm1):
     M1 = (A1 > a1).float()
 
     coordinates = []
+    lamda = []
     for i, (m, fms_2) in enumerate(zip(M, fms)):
         # Check the shape of fms_2 before reshaping
         #print(f"Original fms_2 shape: {fms_2.shape}")
@@ -186,6 +187,7 @@ def AOLM(fms, fm1):
 
         #print(f"lam: {lam}")
         coordinates.append(coordinate)
+        lamda.append(lam)
 
     return coordinates, lam
 
