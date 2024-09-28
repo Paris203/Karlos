@@ -84,7 +84,7 @@ def train(model,
           start_epoch,
           end_epoch,
           save_interval,
-         load_checkpoint_path):
+          load_checkpoint_path):
 
     # Create directories for saving files
     create_directories(save_path, checkpoint_path)
@@ -107,11 +107,11 @@ def train(model,
         'windowscls_loss_avg': [],
         'total_loss_avg': []
     }
+
     # Load checkpoint if provided
     if load_checkpoint_path:
         start_epoch, lr, train_acc = load_checkpoint(load_checkpoint_path, model)
         print(f"Resuming training from epoch {start_epoch + 1}")
-        # print(f"Checkpoint loaded from epoch {start_epoch}, with learning rate {lr:.6f} and train accuracy { train_acc :.4f}")
     else:
         print(f"Starting training from scratch at epoch {start_epoch + 1}")
         
@@ -135,19 +135,26 @@ def train(model,
 
             optimizer.zero_grad()
 
+            # Get the model outputs, including fm and conv5_b
             proposalN_windows_score, proposalN_windows_logits, indices, \
-            window_scores, _, raw_logits, local_logits, fms = model(images, epoch, i, 'train')
-            print(f"fms in the training model {fms.shape}")
+            window_scores, _, raw_logits, local_logits, fm = model(images, epoch, i, 'train')
+
+            # Assuming fm is the feature map and conv5_b is also a feature map output
+            embedding, conv5_b = fm, conv5_b = fm, conv5_b = model.pretrained_model(images)
+
+            # Call AOLM function to get the coordinates and lam
+            coordinates, lam = AOLM(fm.detach(), conv5_b.detach())
 
             raw_loss = criterion(raw_logits, labels)
             local_loss = criterion(local_logits, labels)
             windowscls_loss = criterion(proposalN_windows_logits,
-                               labels.unsqueeze(1).repeat(1, proposalN).view(-1))
+                                        labels.unsqueeze(1).repeat(1, proposalN).view(-1))
 
+            # Multiply total loss by lam after epoch 2
             if epoch < 2:
                 total_loss = raw_loss
             else:
-                total_loss = raw_loss + local_loss + windowscls_loss
+                total_loss = (raw_loss + local_loss + windowscls_loss) * lam
 
             total_loss.backward()
 
@@ -211,10 +218,3 @@ def train(model,
                 'learning_rate': lr,
                 'train_accuracy': train_metrics['raw_accuracy'][-1],
             }, os.path.join(checkpoint_path, 'model_checkpoint' + '.pth'))
-
-        # # Limit the number of checkpoints to max_checkpoint_num
-        # checkpoint_list = [os.path.basename(path) for path in glob.glob(os.path.join(checkpoint_path, '*.pth'))]
-        # if len(checkpoint_list) == max_checkpoint_num + 1:
-        #     idx_list = [int(name.replace('epoch', '').replace('.pth', '')) for name in checkpoint_list]
-        #     min_idx = min(idx_list)
-        #     os.remove(os.path.join(checkpoint_path, 'epoch' + str(min_idx) + '.pth'))
