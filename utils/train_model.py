@@ -11,7 +11,7 @@ from config import pretrain_path
 from networks import resnet
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-pretrain_model = resnet.resnet50(pretrained=True, pth_path=pretrain_path)
+pretrain_model = resnet.resnet50(pretrained=True, pth_path=pretrain_path).to(device)
 
 
 def load_checkpoint(checkpoint_path, model):
