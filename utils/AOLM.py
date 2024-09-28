@@ -110,6 +110,71 @@ def plot_and_save_image(image_tensor, save_path="saved_image.png"):
 #         coordinates.append(coordinate)
 #     return coordinates
 
+# def AOLM(fms, fm1):
+#     # Plot the feature map for visualization if needed
+#     plot_and_save_image(fms, save_path="saved_image.png")
+    
+#     A = torch.sum(fms, dim=1, keepdim=True)
+#     a = torch.mean(A, dim=[2, 3], keepdim=True)
+#     M = (A > a).float()
+
+#     A1 = torch.sum(fm1, dim=1, keepdim=True)
+#     a1 = torch.mean(A1, dim=[2, 3], keepdim=True)
+#     M1 = (A1 > a1).float()
+
+#     coordinates = []
+#     for i, (m, fms_2) in enumerate(zip(M, fms)):
+#         # Check the shape of fms_2 before reshaping
+#         print(f"Original fms_2 shape: {fms_2.shape}")
+        
+#         mask_np = m.cpu().numpy().reshape(14, 14)
+
+#         # Reduce fms_2 over the channel dimension if needed
+#         # Taking the mean of the channels to reduce it to (14, 14)
+#         fms_2_reduced = torch.mean(fms_2, dim=0)  # Now fms_2_reduced should be (14, 14)
+#         print(f"Reduced fms_2 shape: {fms_2_reduced.shape}")
+        
+#         fms_2_np = fms_2_reduced.cpu().numpy()  # Convert to NumPy array for further processing
+
+#         component_labels = measure.label(mask_np)
+
+#         properties = measure.regionprops(component_labels)
+#         areas = [prop.area for prop in properties]
+
+#         if len(areas) == 0:
+#             print("No regions found in component_labels.")
+#             continue  # Skip if no areas found
+        
+#         max_idx = areas.index(max(areas))
+#         intersection = ((component_labels == (max_idx + 1)).astype(int) + (M1[i][0].cpu().numpy() == 1).astype(int)) == 2
+#         prop = measure.regionprops(intersection.astype(int))
+
+#         if len(prop) == 0:
+#             bbox = [0, 0, 14, 14]
+#             print('No intersection found')
+#         else:
+#             bbox = prop[0].bbox
+        
+#         x_lefttop = bbox[0] * 32 - 1
+#         y_lefttop = bbox[1] * 32 - 1
+#         x_rightlow = bbox[2] * 32 - 1
+#         y_rightlow = bbox[3] * 32 - 1
+
+#         # Ensure the coordinates are valid
+#         if x_lefttop < 0:
+#             x_lefttop = 0
+#         if y_lefttop < 0:
+#             y_lefttop = 0
+        
+#         coordinate = [x_lefttop, y_lefttop, x_rightlow, y_rightlow]
+
+#         # Correct the `lam` calculation by using the reduced (14, 14) feature map
+#         lam = torch.sum(fms_2_reduced / ((x_rightlow - x_lefttop) * (y_rightlow - y_lefttop)))
+#         print(f"lam: {lam}")
+#         coordinates.append(coordinate)
+
+#     return coordinates
+
 def AOLM(fms, fm1):
     # Plot the feature map for visualization if needed
     plot_and_save_image(fms, save_path="saved_image.png")
@@ -129,11 +194,10 @@ def AOLM(fms, fm1):
         
         mask_np = m.cpu().numpy().reshape(14, 14)
 
-        # Reduce fms_2 over the channel dimension if needed
-        # Taking the mean of the channels to reduce it to (14, 14)
-        fms_2_reduced = torch.mean(fms_2, dim=0)  # Now fms_2_reduced should be (14, 14)
+        # Reduce fms_2 over the channel dimension to get (14, 14)
+        fms_2_reduced = torch.mean(fms_2, dim=0)  # Now fms_2_reduced is (14, 14)
         print(f"Reduced fms_2 shape: {fms_2_reduced.shape}")
-        
+
         fms_2_np = fms_2_reduced.cpu().numpy()  # Convert to NumPy array for further processing
 
         component_labels = measure.label(mask_np)
@@ -144,7 +208,7 @@ def AOLM(fms, fm1):
         if len(areas) == 0:
             print("No regions found in component_labels.")
             continue  # Skip if no areas found
-        
+
         max_idx = areas.index(max(areas))
         intersection = ((component_labels == (max_idx + 1)).astype(int) + (M1[i][0].cpu().numpy() == 1).astype(int)) == 2
         prop = measure.regionprops(intersection.astype(int))
@@ -154,7 +218,7 @@ def AOLM(fms, fm1):
             print('No intersection found')
         else:
             bbox = prop[0].bbox
-        
+
         x_lefttop = bbox[0] * 32 - 1
         y_lefttop = bbox[1] * 32 - 1
         x_rightlow = bbox[2] * 32 - 1
@@ -165,14 +229,27 @@ def AOLM(fms, fm1):
             x_lefttop = 0
         if y_lefttop < 0:
             y_lefttop = 0
-        
+
         coordinate = [x_lefttop, y_lefttop, x_rightlow, y_rightlow]
 
         # Correct the `lam` calculation by using the reduced (14, 14) feature map
-        lam = torch.sum(fms_2_reduced / ((x_rightlow - x_lefttop) * (y_rightlow - y_lefttop)))
+        # Normalize the values to be between 0 and 1
+        fms_2_reduced_flat = fms_2_reduced.view(-1)
+        fms_2_reduced_min = torch.min(fms_2_reduced_flat)
+        fms_2_reduced_max = torch.max(fms_2_reduced_flat)
+        fms_2_reduced_norm = (fms_2_reduced_flat - fms_2_reduced_min) / (fms_2_reduced_max - fms_2_reduced_min + 1e-6)
+
+        # Compute lam as the mean of the normalized feature map
+        lam = torch.mean(fms_2_reduced_norm).item()
+
+        # Scale lam to be between 0.1 and 0.9
+        lam = 0.8 * lam + 0.1
+        lam = max(0.1, min(lam, 0.9))  # Ensure lam is within [0.1, 0.9]
+
         print(f"lam: {lam}")
         coordinates.append(coordinate)
 
     return coordinates
+
 
 
