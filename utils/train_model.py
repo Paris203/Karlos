@@ -143,7 +143,7 @@ def train(model,
             window_scores, _, raw_logits, local_logits, _ = model(images, epoch, i, 'train')
 
             # Assuming fm is the feature map and conv5_b is also a feature map output
-            fm, embedding, conv5_b = model.pretrain_model(images)
+            fm, embedding, conv5_b = pretrain_model(images)
             print(f" shape fm in model {fm.shape}, conv5_b shape {conv5_b.shape}")
 
             # Call AOLM function to get the coordinates and lam
