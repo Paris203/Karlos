@@ -70,7 +70,7 @@ def main():
           start_epoch=start_epoch,
           end_epoch=end_epoch,
           save_interval=save_interval,
-         load_checkpoint_path=False)
+         load_checkpoint_path=load_checkpoint_path)
 
 
 if __name__ == '__main__':
