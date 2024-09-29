@@ -30,7 +30,7 @@ def eval(model, testloader, criterion, status, save_path, epoch):
             labels = labels.to(device)
 
             proposalN_windows_score,proposalN_windows_logits, indices, \
-            window_scores, coordinates, raw_logits, local_logits, local_imgs = model(images, epoch, i, status)
+            window_scores, coordinates, raw_logits, local_logits, local_imgs,_, _ = model(images, epoch, i, status)
 
             raw_loss = criterion(raw_logits, labels)
             local_loss = criterion(local_logits, labels)
