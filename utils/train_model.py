@@ -129,7 +129,7 @@ def train(model,
         lr = next(iter(optimizer.param_groups))['lr']
         train_metrics['learning_rate'].append(lr)
 
-        for i, data in enumerate(tqdm(trainloader)):
+        for i, data in enumerate(trainloader):
             if set == 'CUB':
                 images, labels, _, _ = data
             else:
