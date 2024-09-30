@@ -197,7 +197,7 @@ def train(model,
         raw_loss_avg, windowscls_loss_avg, total_loss_avg, raw_accuracy, local_accuracy, \
         local_loss_avg = eval(model, testloader, criterion, 'test', save_path, epoch)
 
-        print(f'Test set: raw accuracy: {100. * raw_accuracy:.2f}%, local accuracy: {100. * local_accuracy:.2f}%')
+        print(f'Test set: raw accuracy: {100. * raw_accuracy:.2f}%, learning rate:{lr}, local accuracy: {100. * local_accuracy:.2f}%')
 
         # Store metrics
         test_metrics['raw_accuracy'].append(raw_accuracy)
